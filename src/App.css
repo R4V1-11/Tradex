@@ -89,6 +89,22 @@
 
 .formCenter {
   margin-bottom: 100px;
+  display: flex; /* Use Flexbox to center the form */
+  justify-content: center; /* Center the form horizontally */
+  align-items: center; /* Center the form vertically */
+  height:  100vh; /* Set the height to  100% of the viewport */
+  margin:  0 auto; /* Center the div block */
+  border:  1px solid #000; /* Add a border around the form */
+  padding:  20px;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+  object-fit: contain;
+  
 }
 
 .formTitle {
@@ -180,7 +196,5 @@
   margin-left: 5px;
 }
 
-.socialMediaButtons {
-  padding: 10px 100px 10px 0px;
-}
+
 

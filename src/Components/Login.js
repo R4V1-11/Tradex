@@ -1,31 +1,80 @@
-import React,{useState} from "react";
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
-const Login = () =>{
-   const[email,Setemail] = useState('');
-   const[password,Setpassword] = useState('');
+class LoginForm extends Component {
+  constructor() {
+    super();
 
+    this.state = {
+      username: "",
+      password: ""
+    };
 
-const handleLogin = () =>{
-    //need to put login logic here
-    console.log("Login button is clicked");
+    this.handleChange = this.handleChange.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+  }
+
+  handleChange(event) {
+    let target = event.target;
+    let value = target.type === "checkbox" ? target.checked : target.value;
+    let name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleLogin(event) {
+    //signup logic here
+
+    console.log("The form was submitted with the following data:");
+    console.log(this.state);
+  }
+
+  render() {
+    return (
+      <div className="formCenter">
+        <form className="formFields" onSubmit={this.handleLogin}>
+          <div className="formField">
+            <label className="formFieldLabel" htmlFor="text">
+              UserName
+            </label>
+            <input
+              type="text"
+              id="username"
+              className="formFieldInput"
+              placeholder="Enter your username"
+              name="username"
+              value={this.state.username}
+              onChange={this.handleChange}
+            />
+          </div>
+
+          <div className="formField">
+            <label className="formFieldLabel" htmlFor="password">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="formFieldInput"
+              placeholder="Enter your password"
+              name="password"
+              value={this.state.password}
+              onChange={this.handleChange}
+            />
+          </div>
+
+          <div className="formField">
+            <button className="formFieldButton">Sign Up</button>{" "}
+            <Link to="/signup" className="formFieldLink">
+              New User?
+            </Link>
+          </div>
+        </form>
+      </div>
+    );
+  }
 }
 
-return (
-   <div>
-        <h2>Login</h2>
-        <form>
-            <label>Email:</label>
-            <input type = 'email' value={email} onChange={(e) => Setemail(e.target.value)} />
-
-
-            <label>Password:</label>
-            <input type = "password" value={password} onChange={(e)=>Setpassword(e.target.value)} />
-
-            <button type = "button" onClick={handleLogin}>Login</button>
-        </form>
-    </div>
-    
-);
-
-};
-export default Login;
+export default LoginForm; 
