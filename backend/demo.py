@@ -2,7 +2,9 @@ from flask import Flask, request, jsonify
 import yfinance as yf
 import pandas as pd
 from flask_mysqldb import MySQL
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -10,11 +12,11 @@ app = Flask(__name__)
 
 
 # MySQL configurations
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3307  # Default MySQL port
-app.config['MYSQL_USER'] = 'root'
-#app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'tradex'
+app.config['MYSQL_HOST'] = os.getenv('HOST')
+app.config['MYSQL_PORT'] = int(os.getenv('DATABASE_PORT')) # Default MySQL port
+app.config['MYSQL_USER'] =  os.getenv('DATABASE_USER')
+app.config['MYSQL_PASSWORD'] = os.getenv('DATABASE_PASSWORD')
+app.config['MYSQL_DB'] =  os.getenv('DATABASE_NAME')
 
 
 mysql = MySQL(app)
