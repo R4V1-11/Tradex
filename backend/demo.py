@@ -9,13 +9,13 @@ from routes.auth import auth_bp
 from routes.stockprices import stockprice_bp
 from routes.sell_stock import sellstock_bp
 from routes.buy_stock import buystock_bp
-
+from flask_cors import CORS
 
 load_dotenv()
 
 app = Flask(__name__)
 
-
+CORS(app)
 
 
 # MySQL configurations
