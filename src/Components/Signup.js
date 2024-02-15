@@ -35,7 +35,8 @@ class SignInForm extends Component {
 
   render() {
     return (
-      <div className="formCenter">
+      <div className="formContainer">
+      <h1>SIGN UP</h1>
         <form className="formFields" onSubmit={this.handleSignup}>
           <div className="formField">
             <label className="formFieldLabel" htmlFor="email">
@@ -47,7 +48,7 @@ class SignInForm extends Component {
               className="formFieldInput"
               placeholder="Enter your email"
               name="email"
-              value={this.state.email}
+              required value={this.state.email}
               onChange={this.handleChange}
             />
           </div>
@@ -62,7 +63,7 @@ class SignInForm extends Component {
               className="formFieldInput"
               placeholder="Enter your username"
               name="username"
-              value={this.state.username}
+              required value={this.state.username}
               onChange={this.handleChange}
             />
           </div>
@@ -77,7 +78,7 @@ class SignInForm extends Component {
               className="formFieldInput"
               placeholder="Enter your name"
               name="name"
-              value={this.state.name}
+              required value={this.state.name}
               onChange={this.handleChange}
             />
           </div>

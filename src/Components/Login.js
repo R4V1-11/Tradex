@@ -25,7 +25,7 @@ class LoginForm extends Component {
   }
 
   handleLogin(event) {
-    //signup logic here
+    // signup logic here
 
     console.log("The form was submitted with the following data:");
     console.log(this.state);
@@ -33,7 +33,8 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <div className="formCenter">
+      <div className="formContainer">
+        <h1>LOGIN</h1>
         <form className="formFields" onSubmit={this.handleLogin}>
           <div className="formField">
             <label className="formFieldLabel" htmlFor="text">
@@ -45,7 +46,7 @@ class LoginForm extends Component {
               className="formFieldInput"
               placeholder="Enter your username"
               name="username"
-              value={this.state.username}
+              required value={this.state.username}
               onChange={this.handleChange}
             />
           </div>
@@ -60,7 +61,7 @@ class LoginForm extends Component {
               className="formFieldInput"
               placeholder="Enter your password"
               name="password"
-              value={this.state.password}
+              required value={this.state.password}
               onChange={this.handleChange}
             />
           </div>
@@ -77,4 +78,4 @@ class LoginForm extends Component {
   }
 }
 
-export default LoginForm; 
+export default LoginForm;
