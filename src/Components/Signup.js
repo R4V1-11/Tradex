@@ -26,9 +26,43 @@ class SignInForm extends Component {
     });
   }
 
-  handleSignup(event) {
+  async handleSignup(event) {
     //signup logic here
+    //const loginEndpoint = "http://127.0.0.1:5000/register_user";
+    event.preventDefault();
 
+    const { email, username, name, password } = this.state;
+
+    // Your Flask backend endpoint for user registration
+    const signupEndpoint = "http://127.0.0.1:5000/register_user";
+
+    try {
+      const response = await fetch(signupEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          username: username,
+          name: name,
+          password: password,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("User registration successful:", data);
+        // You can update the state or perform other actions upon successful registration
+      } else {
+        const errorData = await response.json();
+        console.error("User registration failed:", errorData.message);
+        // Handle registration failure, show error message, etc.
+      }
+    } catch (error) {
+      console.error("An error occurred during user registration:", error);
+      // Handle network errors or other issues
+    }
     console.log("The form was submitted with the following data:");
     console.log(this.state);
   }
