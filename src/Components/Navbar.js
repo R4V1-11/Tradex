@@ -8,7 +8,7 @@ const Navbar = () => (
     <div className="brand">Tradex</div>
     <ul className="nav-links">
       <li>
-        <Link to="/WL1" className="nav-button">
+        <Link to="/dash" className="nav-button">
           Watchlist1
         </Link>
       </li>
