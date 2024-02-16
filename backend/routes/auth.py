@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask_mysqldb import MySQL
 from flask import Blueprint
 import bcrypt
+from flask_jwt_extended import create_access_token
+
 
 
 def hash_password(password):
@@ -67,8 +69,9 @@ def login_user():
             "email": user[2],
             # Include other fields as needed
         }
-        return jsonify({"user": user_info}), 200
+        access_token = create_access_token(identity=data["email"]) 
+        return jsonify({"user": data, "access_token": access_token}),  200
     else:
         # User not found, return error message
         return jsonify({"error": "Invalid email or password"}), 404
-
+    
