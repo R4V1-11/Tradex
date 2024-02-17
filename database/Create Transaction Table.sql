@@ -10,3 +10,5 @@ CREATE TABLE transaction_history (
 );
 
 select * from transaction_history;
+
+select * from users;

@@ -5,6 +5,7 @@ from flask import Blueprint
 import datetime
 from flask_jwt_extended import JWTManager, jwt_required
 from yahooquery import Ticker
+from concurrent.futures import ThreadPoolExecutor
 
 
 stockprice_bp = Blueprint('stockprice' , __name__)
@@ -25,7 +26,23 @@ def fetch_stock_price1(ticker):
     else:
         return None        
 
+# This function fetches stock prices for a list of tickers using multithreading
+def get_prices_concurrently(tickers):
+    current_time = datetime.datetime.now()
+    print(current_time)
+    prices = {}
 
+    # Create a ThreadPoolExecutor
+    with ThreadPoolExecutor() as executor:
+        # Use the executor to map the fetch_stock_price function to the list of tickers
+        results = executor.map(fetch_stock_price, tickers)
+
+        # Iterate over the results and store the prices
+        for ticker, price in zip(tickers, results):
+            if price is not None:
+                prices[ticker] = {'price': price, 'current_time': current_time.strftime('%Y-%m-%d %H:%M:%S')}
+
+    return prices
 
 
 
@@ -38,14 +55,8 @@ def get_prices():
     # Read tickers from CSV
     df = pd.read_csv("stocks.csv")
     tickers = df['watchlist1'].tolist()
-    current_time = datetime.datetime.now()
-    print(current_time)
-    # Fetch prices for each ticker
-    prices = {}
-    for ticker in tickers:
-        price = fetch_stock_price(ticker)
-        if price is not None:
-            prices[ticker] = {'price': price, 'current_time': current_time.strftime('%Y-%m-%d %H:%M:%S')}
+    # Fetch prices for each ticker concurrently
+    prices = get_prices_concurrently(tickers)
  
     return jsonify(prices)
  
@@ -58,14 +69,8 @@ def get_priceswl2():
     df = pd.read_csv("stocks.csv")
     df['watchlist2'] = df['watchlist2'].astype(str)
     tickers = df['watchlist2'].tolist()
-    current_time = datetime.datetime.now()
-    print(current_time)
-    # Fetch prices for each ticker
-    prices = {}
-    for ticker in tickers:
-        price = fetch_stock_price(ticker)
-        if price is not None:
-            prices[ticker] = {'price': price, 'current_time': current_time.strftime('%Y-%m-%d %H:%M:%S')}
+    # Fetch prices for each ticker concurrently
+    prices = get_prices_concurrently(tickers)
  
     return jsonify(prices)
  
