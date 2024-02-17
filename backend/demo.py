@@ -12,6 +12,8 @@ from routes.buy_stock import buystock_bp
 from routes.addFunds import addfund_bp
 from routes.getStockByUserID import userStock_bp
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
+
 
 load_dotenv()
 
@@ -21,6 +23,7 @@ app = Flask(__name__)
 
 
 # MySQL configurations
+CORS(app)
 app.config['MYSQL_HOST'] = os.getenv('HOST')
 app.config['MYSQL_PORT'] = int(os.getenv('DATABASE_PORT')) # Default MySQL port
 app.config['MYSQL_USER'] =  os.getenv('DATABASE_USER')

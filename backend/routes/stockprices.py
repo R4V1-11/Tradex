@@ -4,6 +4,8 @@ import pandas as pd
 from flask import Blueprint
 import datetime
 from flask_jwt_extended import JWTManager, jwt_required
+from yahooquery import Ticker
+
 
 stockprice_bp = Blueprint('stockprice' , __name__)
 def fetch_stock_price(ticker):
@@ -13,6 +15,22 @@ def fetch_stock_price(ticker):
         return data['Close'][0]
     else:
         return None
+
+
+def fetch_stock_price1(ticker):
+    stock = Ticker(ticker)
+    data = stock.history(period="1d", timeout=10)
+    if not data.empty:
+        return data['close'][0]
+    else:
+        return None        
+
+
+
+
+
+        
+            
 #return the stock price in the form of list
 @stockprice_bp.route("/get_prices_wl1", methods=["GET"])
 @jwt_required()

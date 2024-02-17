@@ -70,7 +70,7 @@ def login_user():
             # Include other fields as needed
         }
         access_token = create_access_token(identity=data["email"]) 
-        return jsonify({"user": data, "access_token": access_token}),  200
+        return jsonify({"user": user_info, "access_token": access_token}),  200
     else:
         # User not found, return error message
         return jsonify({"error": "Invalid email or password"}), 404
