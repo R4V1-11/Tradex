@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SignInForm from './Pages/Signup';
 import LoginForm from './Pages/Login';
 import Dashboard from './Pages/Dashboard';
@@ -10,15 +10,23 @@ import Watchlist1 from './Components/Watchlist1';
 import Watchlist2 from './Components/Watchlist2';
 
 function App() {
+  const [authenticated, setAuthenticated] = useState(false);
+
+  const handleLoginSuccess = () => {
+    setAuthenticated(true);
+  };
+
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/" exact element={<LoginForm />} />
+          <Route path="/" exact element={<LoginForm onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/signup" exact element={<SignInForm />} />
-          <Route path="/dash" exact element={<Dashboard />} />
-          <Route path="/dash" exact element={<Watchlist1 />} />
-          <Route path="/WL2" exact element={<Watchlist2 />}  />
+          <Route
+            path="/dash"
+            element={authenticated ? <Dashboard /> : <Navigate to="/" />}
+          />
+          <Route path="/WL2" exact element={<Watchlist2 />} />
           <Route path="/portfolio" exact element={<Portfolio />} />
           <Route path="/about" exact element={<About />} />
         </Routes>

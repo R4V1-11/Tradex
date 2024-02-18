@@ -27,7 +27,7 @@ const Watchlist1 = () => {
     <div>
     <Navbar />
       <h2>Welcome to Tradex</h2>
-      <p>Watchlist1</p>
+      <p>Watchlist2</p>
       <div>
         {/* Display stock data */}
         {Object.entries(stockData).map(([ticker, stockInfo]) => (

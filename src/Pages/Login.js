@@ -1,29 +1,29 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+
 class LoginForm extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
   }
+
   handleChange(event) {
     let target = event.target;
     let value = target.type === "checkbox" ? target.checked : target.value;
-    let name =
-      target.name
-      ;
+    let name = target.name;
     this.setState({
-      [name]: value
+      [name]: value,
     });
   }
+
   async handleLogin(event) {
     event.preventDefault();
     const { username, password } = this.state;
-    // Your Flask backend endpoint for login
     const loginEndpoint = "http://127.0.0.1:5000/login";
     try {
       const response = await fetch(loginEndpoint, {
@@ -32,14 +32,16 @@ class LoginForm extends Component {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: username, // Assuming username is the email
+          username: username,
           password: password,
         }),
       });
       if (response.ok) {
         const data = await response.json();
         console.log("Login successful:", data);
-        // You can update the state or perform other actions upon successful login
+        // Call the callback function from props to update the authenticated state
+        this.props.onLoginSuccess();
+        this.props.history.push("/dash");
       } else {
         const errorData = await response.json();
         console.error("Login failed:", errorData.error);
@@ -51,9 +53,8 @@ class LoginForm extends Component {
     }
     console.log("The form was submitted with the following data:");
     console.log(this.state);
-    return <Link to ="/WL1" />
   }
-  
+
   render() {
     return (
       <div className="formContainer">
@@ -69,7 +70,8 @@ class LoginForm extends Component {
               className="formFieldInput"
               placeholder="Enter your username"
               name="username"
-              required value={this.state.username}
+              required
+              value={this.state.username}
               onChange={this.handleChange}
             />
           </div>
@@ -83,7 +85,8 @@ class LoginForm extends Component {
               className="formFieldInput"
               placeholder="Enter your password"
               name="password"
-              required value={this.state.password}
+              required
+              value={this.state.password}
               onChange={this.handleChange}
             />
           </div>
@@ -98,4 +101,5 @@ class LoginForm extends Component {
     );
   }
 }
+
 export default LoginForm;
