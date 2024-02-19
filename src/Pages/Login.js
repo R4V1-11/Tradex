@@ -1,31 +1,31 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-class LoginForm extends Component {
-  constructor() {
-    super();
-    this.state = {
-      username: "",
-      password: ""
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
-  }
-  handleChange(event) {
-    let target = event.target;
-    let value = target.type === "checkbox" ? target.checked : target.value;
-    let name =
-      target.name
-      ;
-    this.setState({
+const LoginForm = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    password: ""
+  });
+
+  const navigate = useNavigate();
+
+  const handleChange = (event) => {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+
+    setFormData({
+      ...formData,
       [name]: value
     });
-  }
-  async handleLogin(event) {
+  };
+
+  const handleLogin = async (event) => {
     event.preventDefault();
-    const { username, password } = this.state;
-    // Your Flask backend endpoint for login
+    const { username, password } = formData;
+
     const loginEndpoint = "http://127.0.0.1:5000/login";
+
     try {
       const response = await fetch(loginEndpoint, {
         method: "POST",
@@ -37,11 +37,14 @@ class LoginForm extends Component {
           password: password,
         }),
       });
+
       if (response.ok) {
         const data = await response.json();
         console.log("Login successful:", data);
         localStorage.setItem('user', JSON.stringify(data));
-        // You can update the state or perform other actions upon successful login
+        // Use navigate instead of history.push
+        
+        navigate("/dash");
       } else {
         const errorData = await response.json();
         console.error("Login failed:", errorData.error);
@@ -51,53 +54,56 @@ class LoginForm extends Component {
       console.error("An error occurred during login:", error);
       // Handle network errors or other issues
     }
+
     console.log("The form was submitted with the following data:");
-    console.log(this.state);
-    return <Link to ="/WL1" />
-  }
-  
-  render() {
-    return (
-      <div className="formContainer">
-        <h1>LOGIN</h1>
-        <form className="formFields" onSubmit={this.handleLogin}>
-          <div className="formField">
-            <label className="formFieldLabel" htmlFor="text">
-              UserName
-            </label>
-            <input
-              type="text"
-              id="username"
-              className="formFieldInput"
-              placeholder="Enter your username"
-              name="username"
-              required value={this.state.username}
-              onChange={this.handleChange}
-            />
-          </div>
-          <div className="formField">
-            <label className="formFieldLabel" htmlFor="password">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="formFieldInput"
-              placeholder="Enter your password"
-              name="password"
-              required value={this.state.password}
-              onChange={this.handleChange}
-            />
-          </div>
-          <div className="formField">
-            <button className="formFieldButton">Sign Up</button>{" "}
-            <Link to="/signup" className="formFieldLink">
-              New User?
-            </Link>
-          </div>
-        </form>
-      </div>
-    );
-  }
-}
+    console.log(formData);
+  };
+
+  return (
+    <div className="formContainer">
+      <h1>LOGIN</h1>
+      <form className="formFields" onSubmit={handleLogin}>
+        <div className="formField">
+          <label className="formFieldLabel" htmlFor="text">
+            UserName
+          </label>
+          <input
+            type="text"
+            id="username"
+            className="formFieldInput"
+            placeholder="Enter your username"
+            name="username"
+            required
+            value={formData.username}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="formField">
+          <label className="formFieldLabel" htmlFor="password">
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            className="formFieldInput"
+            placeholder="Enter your password"
+            name="password"
+            required
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="formField">
+          <button type="submit" className="formFieldButton">
+            Sign Up
+          </button>{" "}
+          <Link to="/signup" className="formFieldLink">
+            New User?
+          </Link>
+        </div>
+      </form>
+    </div>
+  );
+};
+
 export default LoginForm;

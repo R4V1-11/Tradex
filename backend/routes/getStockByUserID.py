@@ -78,3 +78,47 @@ def getStockByUserId():
     finally:
         # Close the cursor
         mycursor.close()
+
+
+
+
+
+
+
+@userStock_bp.route("/get_fund_by_userid", methods=["POST"])
+@jwt_required()
+def getFundByUserId():
+    from demo import mysql
+    data = request.get_json()
+    userid = data.get("userid")
+    
+    # Create a cursor object
+    mycursor = mysql.connection.cursor()
+
+    # Define the SQL query with a placeholder for the userid
+    sql_query = "SELECT id,name,email,fund FROM users WHERE id = %s"
+
+    try:
+        # Execute the query with the userid as a parameter
+        mycursor.execute(sql_query, (userid,))
+
+        # Fetch all the rows
+        result = mycursor.fetchall()
+
+        # Check if result is not empty
+        if not result:
+            return jsonify({"error": "No stocks found for the given userid"}),  404
+
+        # Return the first row of the result set
+        column_names = ["id", "name", "email", "fund"]
+
+    # Convert the list of lists into a list of dictionaries
+        result1 = [dict(zip(column_names, row)) for row in result]
+        return jsonify(result1)
+    except Exception as e:
+        # Log the error or return a message
+        return jsonify({"error": str(e)}),  500
+    finally:
+        # Close the cursor
+        mycursor.close()
+

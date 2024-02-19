@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
+
 
 
 const Watchlist1 = () => {
   const [stockData, setStockData] = useState([]);
   const navigate = useNavigate();
+
+  
   useEffect(() => {
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      // If user data is not present, redirect to the login page
+      navigate('/');
+      return;
+    }
     // Fetch stock prices from the backend when the component mounts
     const fetchData = async () => {
       try {
@@ -51,6 +62,7 @@ const Watchlist1 = () => {
 
   return (
     <div>
+        <Navbar />
     {/* <h2>Welcome to Tradex</h2>
     <p>Watchlist1</p> */}
     <div className="container">
