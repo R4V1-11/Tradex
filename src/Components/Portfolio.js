@@ -1,11 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from "./Navbar";
+import { Link,useNavigate } from "react-router-dom";
+
 import History from './History'
 
 
 const StockList = () => {
   const [stocks, setStocks] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
+  const [ticker, setTicker] = useState('');
+  const [quantity, setQuantity] = useState(0);
+  const navigate = useNavigate();
+
+ 
+  const handleBuyClick = (ticker, price) => {
+    // Retrieve user ID from localStorage
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userId = user && user.user && user.user.id;
+    console.log(userId)
+
+    // Navigate to the /buy route with state containing ticker, price, and userId
+    navigate('/sellPage', { state: { ticker, price, userId } });
+  };
+
+
 
   useEffect(() => {
     const fetchStocks = async () => {
@@ -72,6 +90,11 @@ const StockList = () => {
                 <div className='col'>
                   <div className='card-text'>
                       <strong>Current Price: </strong>{stock.current_price*stock.quantity}
+                  </div>
+                </div>
+                <div className='col'>
+                  <div className='card-text'>
+                  <button className="btn btn-danger" onClick={() => handleBuyClick(stock.ticker, stock.current_price)}>Sell</button>
                   </div>
                 </div>
               </div>
