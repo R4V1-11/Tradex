@@ -4,7 +4,6 @@ import pandas as pd
 from flask import Blueprint
 import datetime
 from flask_jwt_extended import JWTManager, jwt_required
-from yahooquery import Ticker
 from concurrent.futures import ThreadPoolExecutor
 
 
@@ -17,14 +16,7 @@ def fetch_stock_price(ticker):
     else:
         return None
 
-
-def fetch_stock_price1(ticker):
-    stock = Ticker(ticker)
-    data = stock.history(period="1d", timeout=10)
-    if not data.empty:
-        return data['close'][0]
-    else:
-        return None        
+      
 
 # This function fetches stock prices for a list of tickers using multithreading
 def get_prices_concurrently(tickers):

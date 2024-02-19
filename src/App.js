@@ -10,6 +10,7 @@ import Watchlist1 from './Components/Watchlist1';
 import Watchlist2 from './Components/Watchlist2';
 import BuyPage from './Components/BuyPage';
 import SuccessPage  from './Components/SuccessPage';
+import Profile from './Components/Profile';
  
 function App() {
   return (
@@ -25,6 +26,8 @@ function App() {
           <Route path="/about" exact element={<About />} />
           <Route path="/buyPage" exact element={<BuyPage />} />
           <Route path="/successPage" exact element={<SuccessPage />} />
+          <Route path="/Profile" exact element={<Profile />} />
+
  
          
  

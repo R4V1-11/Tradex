@@ -12,6 +12,8 @@ def add_fund():
     data = request.get_json()
     userid = data.get("userid")
     fund = data.get("fund")
+    print(userid)
+    print(fund)
  
     # Call the procedure
     cursor = mysql.connection.cursor()

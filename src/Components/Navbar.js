@@ -27,6 +27,11 @@ const Navbar = () => (
           About
         </Link>
       </li>
+      <li>
+        <Link to="/Profile" className="nav-button">
+          Profile
+        </Link>
+      </li>
     </ul>
   </nav>
 );
