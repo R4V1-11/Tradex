@@ -5,13 +5,18 @@ from flask import Blueprint
 import datetime
 from flask_jwt_extended import JWTManager, jwt_required
 from concurrent.futures import ThreadPoolExecutor
+import time
 
 
 stockprice_bp = Blueprint('stockprice' , __name__)
 def fetch_stock_price(ticker):
+    start = time.time()
+
     stock = yf.Ticker(ticker)
     data = stock.history(period="1d")
     if not data.empty:
+        end  = time.time()
+        print(end-start)
         return data['Close'][0]
     else:
         return None
