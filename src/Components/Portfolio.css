@@ -1,0 +1,11 @@
+.Portfolio-container
+{
+    padding-top: 60px;
+    
+}
+
+.Portfolio-page
+{
+    background-color: #1e1e1e;
+    display: flex;
+}

@@ -1,0 +1,50 @@
+
+
+.login-container {
+    width:  400px;
+    padding:  20px;
+    background-color: black;
+    border-radius:  8px;
+    box-shadow:  0  0  10px #21CE99;
+    margin-left: 400px;
+    margin-top: 150px;
+  }
+ 
+  .login-container h1 {
+    color: #21CE99;
+    font-weight: bold;
+  }
+ 
+  .login-container .form-group {
+    margin-bottom:  15px;
+  }
+ 
+  .login-container .form-control {
+    border-radius:  4px;
+    box-shadow:  0  2px  5px #21CE99;
+  }
+ 
+  .login-container .btn-primary {
+    background-color: #21CE99;
+    border-color: #21CE99;
+    color: black;
+    font-weight: bold;
+  }
+ 
+  .login-container.btn-primary:hover {
+    background-color: #21CE99;
+    border-color: #21CE99;
+  }
+ 
+  .login-container.btn-link {
+    color: #21CE99;
+  }
+ 
+  .container1 .btn-link:hover {
+    color: #21CE99;
+  }
+ 
+  .container1 .placeholder{
+    color: #21CE99;
+  }
+ 
