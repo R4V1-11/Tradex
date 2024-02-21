@@ -13,6 +13,7 @@ const Profile = () => {
   });
 
   const [addFundsAmount, setAddFundsAmount] = useState(0);
+  const [withdrawFundsAmount, setWithdrawFundsAmount] = useState(0);
 
   // Function to fetch user data from the backend API
   const fetchUserData = async () => {
@@ -65,12 +66,46 @@ const Profile = () => {
         // Update user data after adding funds
         fetchUserData();
         // Optionally, reset the addFundsAmount state
+        alert("Fund Added Successfully")
         setAddFundsAmount(0);
       } else {
+        alert("Failed to add funds")
         console.error("Failed to add funds");
       }
     } catch (error) {
       console.error("An error occurred during add funds:", error);
+    }
+  };
+  // Simulate API call to add funds
+  const handleWithdrawFunds = async () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    // Extract the userid from the user object
+    const token = user && user.access_token;
+
+    const userid = user && user.user && user.user.id;
+    try {
+      // Replace with your actual API endpoint
+      const response = await fetch("http://localhost:5000/withdraw_fund_by_userid", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ userid: userid, fund: withdrawFundsAmount }),
+    });
+
+      if (response.ok) {
+        // Update user data after adding funds
+        fetchUserData();
+        // Optionally, reset the addFundsAmount state
+        alert("Fund Withdrawn Successfully")
+        setWithdrawFundsAmount(0);
+      } else {
+        alert("Not Enough Fund")
+        console.error("Failed to Withdraw funds");
+      }
+    } catch (error) {
+      console.error("An error occurred during Withdrawing funds:", error);
     }
   };
 
@@ -102,6 +137,15 @@ const Profile = () => {
             onChange={(e) => setAddFundsAmount(parseFloat(e.target.value))}
           />
           <button className='add-button' onClick={handleAddFunds}>ADD</button>
+        </div>
+        <div>
+          <h2>Withdraw Funds</h2>
+          <input
+            type="number"
+            value={withdrawFundsAmount}
+            onChange={(e) => setWithdrawFundsAmount(parseFloat(e.target.value))}
+          />
+          <button className='withdraw-button' onClick={handleWithdrawFunds}>Withdraw</button>
         </div>
         <div>
           <Link to="/history">
