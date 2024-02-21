@@ -2,12 +2,15 @@
 
 .login-container {
     width:  400px;
-    padding:  20px;
+    padding:  10px;
     background-color: black;
     border-radius:  8px;
     box-shadow:  0  0  10px #21CE99;
     margin-left: 400px;
     margin-top: 150px;
+    height: 400px;
+
+    
   }
  
   .login-container h1 {
@@ -15,10 +18,16 @@
     font-weight: bold;
   }
  
-  .login-container .form-group {
-    margin-bottom:  15px;
+  
+
+  input, .formFieldInput{
+    margin: 0;
+
   }
- 
+
+  .login-container h1{
+    margin-bottom: 10px;
+  }
   .login-container .form-control {
     border-radius:  4px;
     box-shadow:  0  2px  5px #21CE99;

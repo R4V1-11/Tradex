@@ -83,16 +83,16 @@ const Profile = () => {
     <div>
     <Navbar />
     <div className="profile-container">
-      <div className="user-details card">
+      <div className="user-details cardjj">
         <img src={defaultImage} alt="Profile" style={{ maxWidth: "30%", display: "block", margin: "0 auto" }} />
         <hr></hr>
-        <h1>Hello{userData.name}</h1>
+        <h1>{userData.name}!</h1>
         <p>ID: {userData.id}</p>
         <p>Email: {userData.email}</p>
       </div>
-      <div className="funds-section card">
+      <div className="funds-section cardjj">
         <h1>Fund Section</h1>
-        <h1>${userData.fund}</h1>
+        <h1>₹{userData.fund}</h1>
         <hr></hr>
         <div>
           <h2>Add Funds</h2>

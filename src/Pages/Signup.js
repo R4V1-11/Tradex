@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "./Login.css"
+import { Link ,useNavigate} from "react-router-dom";
+import "../CSS/Signup.css"
  
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +9,8 @@ const SignUpForm = () => {
     name: "",
     password: ""
   });
+  const navigate = useNavigate();
+
   const [emailError, setEmailError] = useState("");
  
   const handleChange = (event) => {
@@ -50,6 +52,7 @@ const SignUpForm = () => {
       if (response.ok && emailError === "") {
         const data = await response.json();
         console.log("User registration successful:", data);
+        navigate("/")
         
       } else {
         const errorData = await response.json();
@@ -66,10 +69,11 @@ const SignUpForm = () => {
   };
  
   return (
-    <div className="login-container">
+    <div className="backImg">
+    <div className="container1 mt-4">
     <div className="row justify-content-center">
       <div className="col-md-6">
-        <h1 className="text-center mb-4">SIGN UP</h1>
+        <h1 className="text-center mb-2">SIGN UP</h1>
         <form className="form" onSubmit={handleSignup}>
           <div className="form-group">
             <label htmlFor="username" style={{color: 'azure'}}>UserName</label>
@@ -139,6 +143,9 @@ const SignUpForm = () => {
       </div>
     </div>
   </div>
+  </div>
+ 
+  
   );
 };
  

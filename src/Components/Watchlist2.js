@@ -9,6 +9,12 @@ const Watchlist2 = () => {
   const [Loading, SetisLoading] = useState(true);
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      // If user data is not present, redirect to the login page
+      navigate('/');
+      return;
+    }
     
     const fetchData = async () => {
       try {
@@ -59,7 +65,7 @@ const Watchlist2 = () => {
               <div className="stock-info">
                 <h5 className="ticker">{ticker}</h5>
                 <small className="text-muted">Time: {stockInfo.current_time}</small>
-                <h5 className="price">${parseFloat(stockInfo.price).toFixed(2)}</h5>
+                <h5 className="price">₹{parseFloat(stockInfo.price).toFixed(2)}</h5>
               </div>
               <button
                 className="buy-button"

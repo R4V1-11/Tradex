@@ -14,11 +14,11 @@ const Watchlist1 = () => {
   useEffect(() => {
 
     const user = JSON.parse(localStorage.getItem('user'));
-    /*if (!user) {
+    if (!user) {
       // If user data is not present, redirect to the login page
       navigate('/');
       return;
-    }*/
+    }
     // Fetch stock prices from the backend when the component mounts
     const fetchData = async () => {
       try {
@@ -64,7 +64,7 @@ const Watchlist1 = () => {
 
 
   return (
-    <div>
+    <div className="Watch">
       <Navbar />
       <div className="container">
         { Loading ? (
@@ -75,7 +75,7 @@ const Watchlist1 = () => {
               <div className="stock-info">
                 <h5 className="ticker">{ticker}</h5>
                 <small className="text-muted">Time: {stockInfo.current_time}</small>
-                <h5 className="price">${parseFloat(stockInfo.price).toFixed(2)}</h5>
+                <h5 className="price">₹{parseFloat(stockInfo.price).toFixed(2)}</h5>
               </div>
               <button
                 className="buy-button"

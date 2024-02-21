@@ -37,6 +37,12 @@ const StockList = () => {
 
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      // If user data is not present, redirect to the login page
+      navigate('/');
+      return;
+    }
     const fetchStocks = async () => {
       // Retrieve the user object from local storage
       const user = JSON.parse(localStorage.getItem('user'));
@@ -114,8 +120,8 @@ const StockList = () => {
                   <strong>₹ </strong>{(stock.current_price*stock.quantity).toFixed(2)}
                     <strong  style={{marginLeft:20}} >P/L</strong> {profitOrLoss >=   0 ? '+' : '-'} {Math.abs(profitOrLoss).toFixed(2)}
                     <div>
-                      <button className="btn btn-sm btn-danger" onClick={() => handleSellClick(stock.ticker, stock.current_price,stock.quantity)}>Sell</button>
-                      <button className="btn btn-sm btn-success" onClick={() => handleBuyClick(stock.ticker, stock.current_price)}>Buy</button>
+                      <button className="btn btn-sm btn-danger btn-danger1" onClick={() => handleSellClick(stock.ticker, stock.current_price,stock.quantity)}>Sell</button>
+                      <button className="btn btn-sm btn-success btn-success1" onClick={() => handleBuyClick(stock.ticker, stock.current_price)}>Buy</button>
                     </div>
                   </div>
                 </div>

@@ -75,6 +75,7 @@ const LoginForm = () => {
  
  
   return (
+    <div className="backImg">
     <div className="login-container">
       <div className="row justify-content-center">
         <div className="col-md-6">
@@ -117,6 +118,7 @@ const LoginForm = () => {
           </form>
         </div>
       </div>
+    </div>
     </div>
   );
 };
