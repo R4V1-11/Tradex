@@ -3,9 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import   './Login.css';
 const LoginForm = () => {
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: ""
   });
+  const [emailError, setEmailError] = useState("");
  
   const navigate = useNavigate();
  
@@ -13,16 +14,25 @@ const LoginForm = () => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
- 
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    
+    if (name === 'email') {
+      if (validateEmail(value)) {
+        setFormData({ ...formData, [name]: value });
+        setEmailError(""); // Clear the error message if the email is valid
+      } else {
+        setEmailError("Please enter a valid email address.");
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }  
   };
+  const validateEmail = (email) => {
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return regex.test(String(email).toLowerCase());}
  
   const handleLogin = async (event) => {
     event.preventDefault();
-    const { username, password } = formData;
+    const { email, password } = formData;
  
     const loginEndpoint = "http://127.0.0.1:5000/login";
  
@@ -33,12 +43,12 @@ const LoginForm = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: username, // Assuming username is the email
+          email: email, // Assuming username is the email
           password: password,
         }),
       });
  
-      if (response.ok) {
+      if (response.ok && emailError === "" ) {
         const data = await response.json();
         console.log("Login successful:", data);
         localStorage.setItem('user', JSON.stringify(data));
@@ -55,8 +65,12 @@ const LoginForm = () => {
       // Handle network errors or other issues
     }
  
+    if(emailError === ""){
     console.log("The form was submitted with the following data:");
-    console.log(formData);
+    console.log(formData);}
+    else{
+      console.log("The form was not sent.")
+    }
   };
  
  
@@ -75,9 +89,9 @@ const LoginForm = () => {
                 placeholder="Enter your email"
                 name="email"
                 required
-                value={formData.email}
                 onChange={handleChange}
               />
+              {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
             </div>
             <div className="form-group">
               <label htmlFor="password" style={{color: 'azure'}}>Password</label>

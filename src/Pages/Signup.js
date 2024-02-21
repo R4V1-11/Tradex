@@ -47,7 +47,7 @@ const SignUpForm = () => {
         body: JSON.stringify({ email, username, name, password })
       });
  
-      if (response.ok) {
+      if (response.ok && emailError === "") {
         const data = await response.json();
         console.log("User registration successful:", data);
         

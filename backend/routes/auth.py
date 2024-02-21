@@ -2,6 +2,10 @@ from flask import Flask, request, jsonify
 from flask_mysqldb import MySQL
 from flask import Blueprint
 import bcrypt
+from flask_jwt_extended import create_access_token
+from mysql.connector import Error
+from MySQLdb import IntegrityError
+
 
 
 def hash_password(password):
@@ -27,11 +31,26 @@ def register_user():
     password = hash_password(password_original)
     # Insert user data into the database
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO users (name, email, password) VALUES (%s, %s, %s)", (name, email, password))
-    mysql.connection.commit()
-    cur.close()
+    try:
+        print("try")
+        cur.execute("INSERT INTO users (name, email, password) VALUES (%s, %s, %s)", (name, email, password))
+        print("try1")
+        mysql.connection.commit()
+        print("try2")
+        return jsonify({"message": "User data saved successfully"})
+    except IntegrityError as e:
+        if e.args[0] == 1062:
+            return jsonify({"error": "User Already Exist"}),  501
+        else:
+            return jsonify({"error1": str(e)}),  500
+    except Error as e:
+        return jsonify({"error2": str(e)}),  500
+    finally:
+        print("finally")
+        cur.close()
+    
 
-    return jsonify({"message": "User data saved successfully"})
+    
 
 
 
@@ -53,7 +72,7 @@ def login_user():
         print(hash_password)
     else:
         # User not found, return error message
-        return jsonify({"error": "Invalid email or password"}), 404
+        return jsonify({"error": "Invalid password"}), 401
 
     userPresent = check_password(password, hash_password)
     
@@ -67,8 +86,9 @@ def login_user():
             "email": user[2],
             # Include other fields as needed
         }
-        return jsonify({"user": user_info}), 200
+        access_token = create_access_token(identity=data["email"]) 
+        return jsonify({"user": user_info, "access_token": access_token}),  200
     else:
         # User not found, return error message
-        return jsonify({"error": "Invalid email or password"}), 404
-
+        return jsonify({"error": "Invalid email"}), 401
+    

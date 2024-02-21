@@ -2,11 +2,12 @@ from flask import Flask, request, jsonify
 import yfinance as yf
 import pandas as pd
 from flask import Blueprint
+from flask_jwt_extended import JWTManager, jwt_required
 
 
 sellstock_bp = Blueprint('sellstock' , __name__)
-
 @sellstock_bp.route("/sell_stock", methods=["POST"])
+@jwt_required()
 def sell_stock():
     from demo import mysql
     data = request.get_json()
@@ -15,28 +16,26 @@ def sell_stock():
     price = data.get("price")
     quantity = data.get("quantity")
     cur = mysql.connection.cursor()
-# Check if a stock entry with the same ticker and userid exists
-    cur.execute("SELECT * FROM stock_entry WHERE ticker = %s AND userid = %s", (ticker, userid))
-    existing_entry = cur.fetchone()
-    print(existing_entry[3])
-    print(price)
-    print(quantity)
-    if existing_entry:
-# If entry exists, increment the price and quantity
-        updated_price = existing_entry[2] - price
-        updated_quantity = existing_entry[3] - quantity
-        print(updated_price)
-        print(updated_quantity)
-        print(ticker)
-        print(userid)
-        cur.execute("UPDATE stock_entry SET price = %s, quantity = %s WHERE ticker = %s AND userid = %s",
-        (updated_price, updated_quantity, ticker, userid))
-       
-    else:
-        # If entry doesn't exist, save a new row
-        cur.execute("INSERT INTO stock_entry (ticker, userid, price, quantity) VALUES (%s, %s, %s, %s)",
-        (ticker, userid, price, quantity))
-    cur.execute("INSERT INTO transaction_history (userid, ticker, price,actions, quantity) VALUES (%s,%s, %s, %s,%s)",(userid,ticker, price, "sell",quantity))
-    mysql.connection.commit()
-    cur.close()
-    return jsonify({"message": "User data saved successfully"})
+    try:
+        # Call the stored procedure
+        cur.callproc('SellStock', (ticker, userid, price, quantity))
+        
+        # Check if the stored procedure returned an error (e.g., not enough stocks)
+        if cur.rowcount ==  0:  # Assuming the stored procedure returns affected rows count
+            return jsonify({"error": "Not enough stocks to sell."}),  422
+
+        # Commit the transaction
+        mysql.connection.commit()
+
+        # Close the cursor
+        cur.close()
+
+        return jsonify({"message": "Stock sold and transaction recorded."}),  200
+    except mysql.connect.Error as err:
+        # Rollback the transaction in case of error
+        mysql.connection.rollback()
+
+        # Close the cursor
+        cur.close()
+
+        return jsonify({"error": str(err)}),  500
