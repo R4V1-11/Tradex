@@ -11,6 +11,7 @@ from routes.sell_stock import sellstock_bp
 from routes.buy_stock import buystock_bp
 from routes.addFunds import addfund_bp
 from routes.getStockByUserID import userStock_bp
+from routes.withdrawFunds import withdrawfund_bp
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 
@@ -49,6 +50,7 @@ app.register_blueprint(buystock_bp)
 app.register_blueprint(sellstock_bp)
 app.register_blueprint(addfund_bp)
 app.register_blueprint(userStock_bp)
+app.register_blueprint(withdrawfund_bp)
 
 
 

@@ -9,6 +9,4 @@ CREATE TABLE transaction_history (
     foreign key (userid) references users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-select * from transaction_history;
-
-select * from users;
+-- drop table transaction_history;

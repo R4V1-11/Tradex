@@ -3,6 +3,8 @@ from flask_mysqldb import MySQL
 from flask import Blueprint
 import bcrypt
 from flask_jwt_extended import create_access_token
+from mysql.connector import Error
+from MySQLdb import IntegrityError
 
 
 
@@ -29,11 +31,26 @@ def register_user():
     password = hash_password(password_original)
     # Insert user data into the database
     cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO users (name, email, password) VALUES (%s, %s, %s)", (name, email, password))
-    mysql.connection.commit()
-    cur.close()
+    try:
+        print("try")
+        cur.execute("INSERT INTO users (name, email, password) VALUES (%s, %s, %s)", (name, email, password))
+        print("try1")
+        mysql.connection.commit()
+        print("try2")
+        return jsonify({"message": "User data saved successfully"})
+    except IntegrityError as e:
+        if e.args[0] == 1062:
+            return jsonify({"error": "User Already Exist"}),  501
+        else:
+            return jsonify({"error1": str(e)}),  500
+    except Error as e:
+        return jsonify({"error2": str(e)}),  500
+    finally:
+        print("finally")
+        cur.close()
+    
 
-    return jsonify({"message": "User data saved successfully"})
+    
 
 
 
