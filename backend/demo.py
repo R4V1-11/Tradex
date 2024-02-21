@@ -30,7 +30,7 @@ app.config['MYSQL_PORT'] = int(os.getenv('DATABASE_PORT')) # Default MySQL port
 app.config['MYSQL_USER'] =  os.getenv('DATABASE_USER')
 app.config['MYSQL_PASSWORD'] = os.getenv('DATABASE_PASSWORD')
 app.config['MYSQL_DB'] =  os.getenv('DATABASE_NAME')
-app.config["JWT_SECRET_KEY"] = "OmGPpOKe5mJueB70myLGoktizUU8Jc3N"  # Change this to your secret key!
+app.config["JWT_SECRET_KEY"] =  os.getenv('JWT_SECRET_KEY')
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] =  7 *  24 *  60 *  60
 jwt = JWTManager(app)
 
