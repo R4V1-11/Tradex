@@ -97,7 +97,7 @@
 }
 
 .formTitle {
-  color: #707c8b;
+  color: azure;
   font-weight: 300;
   margin-bottom: 20px; /* Adjust as needed */
 }
@@ -132,7 +132,7 @@
 }
 
 .formFieldInput::placeholder {
-  color: #616e7f;
+  color: azure;
 }
 
 .formFieldButton {
@@ -150,6 +150,7 @@
 .formFieldLink {
   color: black
 }
+
 
 
 

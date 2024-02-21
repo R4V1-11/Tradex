@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from "./Navbar";
 import { Link,useNavigate } from "react-router-dom";
-import "./Portfolio.css";
 
 import History from './History'
+import './Portfolio.css'
 
 
 const StockList = () => {
@@ -12,8 +12,18 @@ const StockList = () => {
   const [ticker, setTicker] = useState('');
   const [quantity, setQuantity] = useState(0);
   const navigate = useNavigate();
+  const [originalSubtotal, setOriginalSubtotal] = useState(0);
 
  
+  const handleSellClick = (ticker, price,quantitys) => {
+    // Retrieve user ID from localStorage
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userId = user && user.user && user.user.id;
+    console.log(userId)
+
+    // Navigate to the /buy route with state containing ticker, price, and userId
+    navigate('/sellPage', { state: { ticker, price, userId,quantitys } });
+  };
   const handleBuyClick = (ticker, price) => {
     // Retrieve user ID from localStorage
     const user = JSON.parse(localStorage.getItem('user'));
@@ -21,7 +31,7 @@ const StockList = () => {
     console.log(userId)
 
     // Navigate to the /buy route with state containing ticker, price, and userId
-    navigate('/sellPage', { state: { ticker, price, userId } });
+    navigate('/buyPage', { state: { ticker, price, userId } });
   };
 
 
@@ -48,8 +58,10 @@ const StockList = () => {
         if (response.ok) {
           const data = await response.json();
           setStocks(data);
-          const total = data.reduce((total, stock) => total + stock.current_price * stock.quantity,  0);
-          setSubtotal(total);
+          const currentTotal = data.reduce((total, stock) => total + stock.current_price * stock.quantity,  0);
+          const originalTotal = data.reduce((total, stock) => total + stock.price * stock.quantity,  0);
+          setSubtotal(currentTotal);
+          setOriginalSubtotal(originalTotal);
         } else {
           console.error('Failed to fetch stocks');
         }
@@ -62,49 +74,61 @@ const StockList = () => {
   }, []);
  
 
+  const profitOrLoss = subtotal - originalSubtotal;
+  const profitOrLossClass = profitOrLoss >  0 ? 'profit' : 'loss';
   return (
-    <div class-name='Portfolio-page'>
+    <div className='Background'>
       <Navbar/>
-      <div className='Portfolio-container'>
-      <h1>Portfolio</h1>
-      <p style={{ textAlign: 'center'}}> Subtotal: {subtotal.toFixed(2)}</p>
+      
+      <div className="subtotal-container">
+        <h5>   
+          Current :{subtotal.toFixed(2)}
+        </h5>
+        <h5 className={profitOrLossClass}>   
+          P/L : {profitOrLoss >=   0 ? '+' : '-'} {Math.abs(profitOrLoss).toFixed(2)}
+        </h5>
+        <h5> Invested : {originalSubtotal.toFixed(2)}</h5>
+      </div>
+
       <div className="container-fluid pt-5">
-        {stocks.map((stock, index) => (
-          <div className="card mb-3" key={index}>
-            <div className="card-body">
-              <h5 className="card-title">{stock.ticker}</h5>
-              <div className='row'>
-                <div className='col'>
-                  <div className='card-title'>
-                      <strong>Price:</strong>{stock.price}
+        {stocks.map((stock, index) => {
+          const profitOrLoss = stock.current_price * stock.quantity - stock.price * stock.quantity;
+          const profitOrLossClass = profitOrLoss >  0 ? 'profit' : 'loss';
+
+          return (
+            <div  className="card mb-3" key={index}>
+              <div className="card-body">
+                <h5 className="card-title">{stock.ticker}</h5>
+                <div className='row'>
+                  <div className='col-md-6'>
+                    <div className='card-title' >
+                        <strong>Price : </strong>{stock.price}
+                        <p className="card-text">
+                          <strong>Qty : </strong> {stock.quantity}
+                        </p>
+                    </div> 
+                  </div>
+  
+                  <div className='col-md-6'>
+                  <div className={`card-text ${profitOrLossClass}`} style={{marginBottom:20}}>
+                  <strong>₹ </strong>{(stock.current_price*stock.quantity).toFixed(2)}
+                    <strong  style={{marginLeft:20}} >P/L</strong> {profitOrLoss >=   0 ? '+' : '-'} {Math.abs(profitOrLoss).toFixed(2)}
+                    <div>
+                      <button className="btn btn-sm btn-danger" onClick={() => handleSellClick(stock.ticker, stock.current_price,stock.quantity)}>Sell</button>
+                      <button className="btn btn-sm btn-success" onClick={() => handleBuyClick(stock.ticker, stock.current_price)}>Buy</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <p className="card-text">
-                <strong>Quantity:</strong> {stock.quantity}
-              </p>
-              <div className='row'>
-                <div className='col'>
-                  <div className='card-text'>
-                      <strong>Original Price: </strong>{stock.price*stock.quantity}
-                  </div>
-                </div>
-                <div className='col'>
-                  <div className='card-text'>
-                      <strong>Current Price: </strong>{stock.current_price*stock.quantity}
-                  </div>
-                </div>
-                <div className='col'>
-                  <div className='card-text'>
-                  <button className="btn btn-danger" onClick={() => handleBuyClick(stock.ticker, stock.current_price)}>Sell</button>
-                  </div>
+                
+                  
+                  
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-       </div>
+          );
+        })}
       </div>
+      {/* <History/> */}
     </div>
   );
 };

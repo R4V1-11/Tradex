@@ -11,6 +11,7 @@ import BuyPage from './Components/BuyPage';
 import SuccessPage  from './Components/SuccessPage';
 import Profile from './Components/Profile';
 import History from './Components/History';
+import SellPage from './Components/SellPage';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/successPage" exact element={<SuccessPage />} />
           <Route path="/Profile" exact element={<Profile />} />
           <Route path="/history" exact element={<History />} />
+          <Route path="/sellPage" exact element={<SellPage />} />
          
  
         </Routes>

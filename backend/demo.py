@@ -34,7 +34,6 @@ app.config["JWT_SECRET_KEY"] = "OmGPpOKe5mJueB70myLGoktizUU8Jc3N"  # Change this
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] =  7 *  24 *  60 *  60
 jwt = JWTManager(app)
 
-
 mysql = MySQL(app)
 
 @app.route("/")
