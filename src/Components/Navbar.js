@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import "./Navbar.css"; // Import the CSS file for styling
+import "./Navbar.css"; 
  
 const Navbar = () => (
   <nav className="navbar-container">
@@ -23,11 +23,11 @@ const Navbar = () => (
           Portfolio
         </NavLink>
       </li>
-      {/* <li>
+       <li>
         <NavLink to="/about" className={({ isActive, isPending}) => isPending ? "" : isActive ? "active-button" : "nav-button"}>
           About
         </NavLink>
-      </li> */}
+      </li> 
       <li>
         <NavLink to="/Profile" className={({ isActive, isPending}) => isPending ? "" : isActive ? "active-button" : "nav-button"}>
           Profile

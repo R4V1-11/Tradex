@@ -15,7 +15,7 @@ def withdraw_fund():
     print(userid)
     print(fund)
 
-    # Call the procedure
+    
     cursor = mysql.connection.cursor()
     try:
         cursor.callproc('WithdrawUserFund', [userid, fund])

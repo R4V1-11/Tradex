@@ -9,10 +9,10 @@ from MySQLdb import IntegrityError
 
 
 def hash_password(password):
-    password = password.encode('utf-8')  # Convert to bytes
-    salt = bcrypt.gensalt()  # Generate a salt
-    hashed_password = bcrypt.hashpw(password, salt)  # Hash the password with the salt
-    return hashed_password.decode('utf-8')  # Return the hashed password as a string
+    password = password.encode('utf-8')  
+    salt = bcrypt.gensalt()  
+    hashed_password = bcrypt.hashpw(password, salt)  
+    return hashed_password.decode('utf-8')  
 
 def check_password(provided_password, stored_hashed_password):
     provided_password = provided_password.encode('utf-8')
@@ -63,7 +63,7 @@ def login_user():
     email = data.get("email")
     password = data.get("password")
     cur = mysql.connection.cursor()
-    # Execute SQL query to retrieve user based on email and password
+   
     cur.execute("SELECT * FROM users WHERE email = %s", (email,))
     user_record = cur.fetchone()
 
@@ -71,20 +71,20 @@ def login_user():
         hash_password= user_record[3]
         print(hash_password)
     else:
-        # User not found, return error message
+        
         return jsonify({"error": "Invalid password"}), 401
 
     userPresent = check_password(password, hash_password)
     
     if userPresent:
-        # User found, fetch all user information
+        
         cur.execute("SELECT * FROM users WHERE email = %s AND password = %s" , (email,hash_password))
         user = cur.fetchone()
         user_info = {
             "id": user[0],
             "name": user[1],
             "email": user[2],
-            # Include other fields as needed
+            
         }
         access_token = create_access_token(identity=data["email"]) 
         return jsonify({"user": user_info, "access_token": access_token}),  200

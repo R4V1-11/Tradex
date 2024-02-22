@@ -18,21 +18,21 @@ def buy_stock():
     price = data.get("price")
     quantity = data.get("quantity")
     cursor = mysql.connection.cursor()
-# Check if a stock entry with the same ticker and userid exists
+
     try:
-        # Call the stored procedure
+        
         cursor.callproc('UpdateStockAndTransactionHistory', (ticker, userid, price, quantity))
         
-        # Commit the transaction
+        
         mysql.connection.commit()
 
-        # Close the cursor and connection
+        
         cursor.close()
         mysql.connection.commit()
 
         return jsonify({"message": "Stock and transaction updated successfully."}),  200
     except Exception as e:
-        # Rollback the transaction in case of error
+        
         mysql.connection.rollback()
         cursor.close()
         return jsonify({"error": str(e)}),  500

@@ -45,19 +45,19 @@ const Watchlist1 = () => {
     fetchData();
     const intervalId = setInterval(fetchData,  5000);
 
-    // Clean up the interval when the component unmounts
+    
     return () => clearInterval(intervalId);
-  }, []); // The empty dependency array ensures that this effect runs once when the component mounts
+  }, []); 
 
 
 
   const handleBuyClick = (ticker, price) => {
-    // Retrieve user ID from localStorage
+    
     const user = JSON.parse(localStorage.getItem('user'));
     const userId = user && user.user && user.user.id;
     console.log(userId)
 
-    // Navigate to the /buy route with state containing ticker, price, and userId
+    
     navigate('/buyPage', { state: { ticker, price, userId } });
   };
 

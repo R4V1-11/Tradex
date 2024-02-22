@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "./Navbar";
+import Navbar from "../Components/Navbar";
 import './History.css';
 import { Link, useNavigate } from "react-router-dom";
 
@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
  
 const TransactionHistory = () => {
   const [transactionHistory, setTransactionHistory] = useState([]);
-  const [userId, setUserId] = useState(/* replace with the actual user id */);
+  const [userId, setUserId] = useState;
   const navigate = useNavigate();
 
   
@@ -15,10 +15,10 @@ const TransactionHistory = () => {
   const fetchTransactionHistory = async () => {
     const user = JSON.parse(localStorage.getItem('user'));
     const token = user && user.access_token;
-    // Extract the userid from the user object
+    
     const userid = user && user.user && user.user.id;
     try {
-      // Replace with your actual API endpoint
+      
       const response = await fetch("http://localhost:5000/get_history_by_userid", {
         method: "POST",
         headers: {
@@ -74,7 +74,7 @@ const TransactionHistory = () => {
   );
 };
  
-// Add this inline style object at the end of your component
+
 const historyStyles = {
   maxWidth: '600px',
   margin: '0 auto',

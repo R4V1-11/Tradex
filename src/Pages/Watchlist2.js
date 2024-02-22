@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./Navbar";
+import Navbar from "../Components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import "./Watchlist.css"; // Import the CSS file for styling
 
@@ -40,12 +40,11 @@ const Watchlist2 = () => {
     fetchData();
     const intervalId = setInterval(fetchData,  5000);
 
-    // Clean up the interval when the component unmounts
+   
     return () => clearInterval(intervalId);
-  }, []); // The empty dependency array ensures that this effect runs once when the component mounts
-
+  }, []); 
   const handleBuyClick = (ticker, price) => {
-    // Retrieve user ID from localStorage
+    
     const user = JSON.parse(localStorage.getItem("user"));
     const userId = user && user.user && user.user.id;
 

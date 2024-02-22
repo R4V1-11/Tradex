@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
+import Navbar from "../Components/Navbar";
 
 const SuccessPage = () => {
   const navigate = useNavigate();
@@ -12,12 +12,12 @@ const SuccessPage = () => {
       navigate('/');
       return;
     }
-    // Set a timer to redirect to the watchlist page after  2 seconds
+    
     const timer = setTimeout(() => {
-      navigate('/dash'); // Replace '/watchlist' with the actual path to your watchlist page
+      navigate('/dash'); 
     },  2000);
 
-    // Clear the timer if the component is unmounted before the timer ends
+    
     return () => clearTimeout(timer);
   }, [navigate]);
 

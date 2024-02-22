@@ -17,17 +17,17 @@ def sell_stock():
     quantity = data.get("quantity")
     cur = mysql.connection.cursor()
     try:
-        # Call the stored procedure
+       
         cur.callproc('SellStock', (ticker, userid, price, quantity))
         
-        # Check if the stored procedure returned an error (e.g., not enough stocks)
-        if cur.rowcount ==  0:  # Assuming the stored procedure returns affected rows count
+       
+        if cur.rowcount ==  0: 
             return jsonify({"error": "Not enough stocks to sell."}),  422
 
-        # Commit the transaction
+        
         mysql.connection.commit()
 
-        # Close the cursor
+        
         cur.close()
 
         return jsonify({"message": "Stock sold and transaction recorded."}),  200
@@ -35,7 +35,7 @@ def sell_stock():
         # Rollback the transaction in case of error
         mysql.connection.rollback()
 
-        # Close the cursor
+        
         cur.close()
 
         return jsonify({"error": str(err)}),  500
