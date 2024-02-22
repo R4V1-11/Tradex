@@ -1,8 +1,7 @@
 /* StockList.css */
 .Background {
-    background-color: black;
+    background-color: #1e1e1e;
     color: white;
-    padding:  20px;
     min-height:  100vh;
   }
   .container-fluid {
@@ -70,10 +69,10 @@
   }
   .subtotal-container {
     display: flex;
-    margin-top: 30px;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     text-align: center;
+    padding-top: 60px;
     
     
   }

@@ -87,13 +87,13 @@ const StockList = () => {
       <Navbar/>
       
       <div className="subtotal-container">
-        <h5>   
-          Current :{subtotal.toFixed(2)}
-        </h5>
+        <h5> Invested : {originalSubtotal.toFixed(2)}</h5>
         <h5 className={profitOrLossClass}>   
           P/L : {profitOrLoss >=   0 ? '+' : '-'} {Math.abs(profitOrLoss).toFixed(2)}
         </h5>
-        <h5> Invested : {originalSubtotal.toFixed(2)}</h5>
+        <h5>   
+          Current :{subtotal.toFixed(2)}
+        </h5>
       </div>
 
       <div className="container-fluid pt-5">

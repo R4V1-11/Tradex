@@ -1,41 +1,40 @@
-// Navbar.js
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./Navbar.css"; // Import the CSS file for styling
-
+ 
 const Navbar = () => (
   <nav className="navbar-container">
-    <Link to="/dash" className="brand">
+    <NavLink to="/dash" className="brand">
       TradeX
-    </Link>
+    </NavLink>
     <ul className="nav-links">
       <li>
-        <Link to="/dash" className="nav-button">
+        <NavLink to="/dash" className={({ isActive, isPending}) => isPending ? "" : isActive ? "active-button" : "nav-button"}>
           Watchlist1
-        </Link>
+        </NavLink>
       </li>
       <li>
-        <Link to="/WL2" className="nav-button">
+        <NavLink to="/WL2" className={({ isActive, isPending}) => isPending ? "" : isActive ? "active-button" : "nav-button"}>
           Watchlist2
-        </Link>
+        </NavLink>
       </li>
       <li>
-        <Link to="/portfolio" className="nav-button">
+        <NavLink to="/portfolio" className={({ isActive, isPending}) => isPending ? "" : isActive ? "active-button" : "nav-button"}>
           Portfolio
-        </Link>
+        </NavLink>
       </li>
-      <li>
-        <Link to="/about" className="nav-button">
+      {/* <li>
+        <NavLink to="/about" className={({ isActive, isPending}) => isPending ? "" : isActive ? "active-button" : "nav-button"}>
           About
-        </Link>
-      </li>
+        </NavLink>
+      </li> */}
       <li>
-        <Link to="/Profile" className="nav-button">
+        <NavLink to="/Profile" className={({ isActive, isPending}) => isPending ? "" : isActive ? "active-button" : "nav-button"}>
           Profile
-        </Link>
+        </NavLink>
       </li>
     </ul>
   </nav>
 );
-
+ 
 export default Navbar;
