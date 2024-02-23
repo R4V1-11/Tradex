@@ -114,7 +114,7 @@ def getFundByUserId():
         
         column_names = ["id", "name", "email", "fund"]
 
-   
+      
         result1 = [dict(zip(column_names, row)) for row in result]
         return jsonify(result1)
     except Exception as e:
@@ -256,13 +256,12 @@ def getHistroyByUserId():
 
         # Fetch all the rows
         result = mycursor.fetchall()
-
         # Check if result is not empty
         if not result:
             return jsonify({"error": "No stocks found for the given userid"}),  404
 
         # Return the first row of the result set
-        column_names = ["ticker", "userid", "price", "quantity"]
+        column_names = ["id", "userid" ,"ticker", "price", "action", "quantity" ,"date"]
 
     # Convert the list of lists into a list of dictionaries
         result1 = [dict(zip(column_names, row)) for row in result]
