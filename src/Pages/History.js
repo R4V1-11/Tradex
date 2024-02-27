@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import './History.css';
  
+ import Downloadbtn from './Downloadbtn';
 const TransactionHistory = () => {
   const [transactionHistory, setTransactionHistory] = useState([]);
   const [userId, setUserId] = useState(/* replace with the actual user id */);
@@ -50,6 +51,7 @@ const TransactionHistory = () => {
   return (
     <div>
     <Navbar />
+    <Downloadbtn></Downloadbtn>
     <div className="History-container">
         <h1 style={{color:'white', alignContent:"center"}}>Transaction History</h1>
         {transactionHistory.length === 0 ? (

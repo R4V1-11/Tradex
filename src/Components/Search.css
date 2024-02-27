@@ -1,0 +1,41 @@
+#inputSearch{
+   
+    border: none;
+    margin-top: 100px;
+    width: 60%;
+    margin-left: 20%;
+    outline: none;
+ 
+}
+ 
+.Lists{
+    background-color:aquamarine;
+    margin-left: 20%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   padding: 10px;
+   border-radius: 10px;
+}
+.Lists li{
+    margin-top: 10px;
+    /* margin-left: 28%; */
+    /* margin-right: 10px; */
+    list-style: none;
+    border: 1px solid #edebeb;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: aquamarine;
+    padding: 10px;
+    background-color: black;
+    border-radius: 5px ;
+   
+}
+.btn{
+    border: 1px solid black;
+    background-color: #81eb7a;
+}

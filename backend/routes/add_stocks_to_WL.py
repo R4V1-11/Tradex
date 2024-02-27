@@ -15,8 +15,11 @@ def add_stock():
         from demo import mysql
         data = request.get_json()
         ticker_in = data.get("ticker")
-        userid_in = data.get("userid")
-        wl_no_in = data.get("WL_no.")
+        userid_in = data.get("userId")
+        wl_no_in = data.get("WL_no")
+        print(ticker_in)
+        print(userid_in)
+        print(wl_no_in)
         cursor = mysql.connection.cursor()
  
         try:

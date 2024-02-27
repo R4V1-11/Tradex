@@ -18,15 +18,10 @@ def buy_stock():
     price = data.get("price")
     quantity = data.get("quantity")
     cursor = mysql.connection.cursor()
-
+    print(data)
     try:
         
         cursor.callproc('UpdateStockAndTransactionHistory', (ticker, userid, price, quantity))
-        
-        
-        mysql.connection.commit()
-
-        
         cursor.close()
         mysql.connection.commit()
 
@@ -34,6 +29,7 @@ def buy_stock():
     except Exception as e:
         
         mysql.connection.rollback()
+        print(e)
         cursor.close()
         return jsonify({"error": str(e)}),  500
  

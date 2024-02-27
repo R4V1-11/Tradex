@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 import yfinance as yf
 import pandas as pd
 from flask import Flask
+from flask import Blueprint
+
 import datetime
 from flask_jwt_extended import JWTManager, jwt_required
 from concurrent.futures import ThreadPoolExecutor
@@ -9,6 +11,7 @@ from routes.stockprices import fetch_stock_price
 import time
 import asyncio
 
+bidstock_bp = Blueprint('bidstock' , __name__)
 
 
 
@@ -80,7 +83,7 @@ def sell_stock(mysql, ticker, userid, price,quantity, threshold_price):
 def check_price_below_threshold(mysql,app):
     with app.app_context():
         while True:
-            print("background")
+            # print("background")
             stocks = fetch_stocks_from_db(mysql)
             for stock in stocks:
                 stock_price = fetch_stock_price(stock["ticker"])  # Simulated function
@@ -93,6 +96,105 @@ def check_price_below_threshold(mysql,app):
                 if stock_price >= threshold_price and action == "sell":
                     print("sold")
                     sell_stock(mysql,stock["ticker"],stock["userid"],stock_price,stock["quantity"], threshold_price)
-            time.sleep(5)
+            time.sleep(60)
 
 
+
+
+
+
+
+@bidstock_bp.route("/bid_on_stock", methods=["POST"])
+@jwt_required()
+def place_bid():
+    data = request.get_json()
+    print(data)
+    # Validate input data
+    if not all(key in data for key in ['userid', 'quantity', 'ticker', 'price', 'action']):
+        return jsonify({"error": "Missing required fields"}),   400
+ 
+    # Prepare the data for the SQL query
+    userid = data['userid']
+    quantity = data['quantity']
+    ticker_name = data['ticker']
+    price = data['price']
+    action = data['action']
+ 
+
+    print(userid,quantity,ticker_name,price,action);
+    # Connect to the database
+    from demo import mysql
+    cursor = mysql.connection.cursor()
+ 
+    # Prepare the SQL query
+    sql_query = """
+    INSERT INTO stock_bid (userid, ticker_symbol, price, quantity, actions)
+    VALUES (%s, %s, %s, %s, %s)
+    """
+ 
+    # Execute the SQL query
+    try:
+        cursor.execute(sql_query, (userid, ticker_name, price, quantity, action))
+        mysql.connection.commit()
+        return jsonify({"message": "Bid placed successfully"}),   200
+    except Exception as e:
+        mysql.connection.rollback()
+        return jsonify({"error": str(e)}),   500
+    finally:
+        cursor.close()
+        # mysql.connection.close()
+ 
+
+
+
+@bidstock_bp.route("/openorders", methods=["POST"])
+@jwt_required()
+def get_orders():
+    from demo import mysql
+    data = request.get_json()
+   
+    userid = data['userid']
+    print(userid)
+    # Connect to the database
+    
+    cursor = mysql.connection.cursor()
+    sql_query ="SELECT * FROM stock_bid WHERE userid = %s"
+    # Execute the SQL query
+    try:
+        cursor.execute(sql_query, (userid,))
+        result = cursor.fetchall()
+        column_names = ["id", "userid" ,"ticker", "price", "quantity", "action"]
+        openstocks = [dict(zip(column_names, row)) for row in result]
+        return jsonify(openstocks) 
+    except Exception as e:
+        return jsonify({"error": str(e)}),   500
+    finally:
+        cursor.close()
+
+
+
+@bidstock_bp.route("/removeorders", methods=["POST"])
+@jwt_required()
+def remove_orders():
+    data = request.get_json()
+   
+    userid = data['userId']
+    ticker_name = data['ticker']
+    price = data['price']
+    action = data['action']
+    print(userid,ticker_name,price,action)
+    # Connect to the database
+    from demo import mysql
+    cursor = mysql.connection.cursor()
+ 
+    # Execute the SQL query
+    try:
+        cursor.execute("DELETE FROM stock_bid WHERE userid = %s and ticker_symbol = %s and price = %s and actions = %s", (userid, ticker_name, price, action))
+        mysql.connection.commit()
+        return jsonify({"message": "Order removed Sucessfully"}),   200
+    except Exception as e:
+        mysql.connection.rollback()
+        return jsonify({"error": str(e)}),   500
+    finally:
+        cursor.close()
+       

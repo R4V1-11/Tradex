@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import "./Watchlist.css"; // Import the CSS file for styling
-
+import SearchBox from "../Components/SearchBox";
+ 
 const Watchlist2 = () => {
   const [stockData, setStockData] = useState([]);
   const navigate = useNavigate();
   const [Loading, SetisLoading] = useState(true);
-
+ 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) {
@@ -15,15 +16,19 @@ const Watchlist2 = () => {
       navigate('/');
       return;
     }
-    
+   
     const fetchData = async () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
         const token = user && user.access_token;
+        const userid = user && user.user && user.user.id;
         const response = await fetch("http://127.0.0.1:5000/get_prices_wl2", {
+          method: "POST",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
+          body: JSON.stringify({ userid: userid })
         });
         if (response.ok) {
           const data = await response.json();
@@ -36,28 +41,71 @@ const Watchlist2 = () => {
       }
       SetisLoading(false);
     };
-
+ 
     fetchData();
     const intervalId = setInterval(fetchData,  5000);
-
+ 
    
     return () => clearInterval(intervalId);
-  }, []); 
+  }, []);
   const handleBuyClick = (ticker, price) => {
-    
+   
     const user = JSON.parse(localStorage.getItem("user"));
     const userId = user && user.user && user.user.id;
-
-    
+ 
+   
     navigate("/buyPage", { state: { ticker, price, userId } });
   };
 
+
+  const RemoveStockFromWL = (ticker) => {
+    // Define the data you want to send to the server
+    const user = JSON.parse(localStorage.getItem('user'));
+    const token = user && user.access_token;
+    // Extract the userid from the user object
+    const userid = user && user.user && user.user.id;
+    const data = {
+        ticker: ticker,
+      userId: userid,
+      WL_no: 2
+    };
+   console.log(data);
+    // Convert the data to JSON format
+    const jsonData = JSON.stringify(data);
+  
+    // Define the request options
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Include the token in the Authorization header if needed
+        'Authorization': `Bearer ${token}`
+      },
+      body: jsonData
+    };
+  
+    // Make the POST request to your server
+    fetch('http://127.0.0.1:5000/remove_stock_WL', requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        window.location.reload();
+        // Optionally, you can update the UI or state here based on the response
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Handle the error appropriately
+      });
+  };
+  
+ 
   return (
     <div>
       <Navbar />
+      <SearchBox currentPage="2"></SearchBox>
       <div className="container">
         { Loading ? (
-          <div className="Loading-Container"></div> 
+          <div className="Loading-Container"></div>
         ) : (
           Object.entries(stockData).map(([ticker, stockInfo]) => (
             <div className="stock-item" key={ticker}>
@@ -72,6 +120,11 @@ const Watchlist2 = () => {
               >
                 Buy
               </button>
+              <button className="buy-button"
+              
+              onClick={() => RemoveStockFromWL(ticker)}
+              
+              >Remove</button>
             </div>
           ))
         )}
@@ -79,5 +132,5 @@ const Watchlist2 = () => {
     </div>
   );
 };
-
+ 
 export default Watchlist2;

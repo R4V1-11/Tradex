@@ -135,7 +135,7 @@ const SignUpForm = () => {
             <button type="submit" className="btn btn-primary">
               REGISTER
             </button>{" "}
-            <Link to="/" className="btn btn-link">
+            <Link to="/">
               Existing User?
             </Link>
           </div>

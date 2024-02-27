@@ -6,6 +6,8 @@ import datetime
 from flask_jwt_extended import JWTManager, jwt_required
 from concurrent.futures import ThreadPoolExecutor
 import time
+import os
+import requests
 
 
 stockprice_bp = Blueprint('stockprice' , __name__)
@@ -46,28 +48,157 @@ def get_prices_concurrently(tickers):
         
             
 #return the stock price in the form of list
-@stockprice_bp.route("/get_prices_wl1", methods=["GET"])
+# @stockprice_bp.route("/get_prices_wl1", methods=["GET"])
 
-def get_prices():
-    # Read tickers from CSV
-    df = pd.read_csv("stocks.csv")
-    tickers = df['watchlist1'].tolist()
-    # Fetch prices for each ticker concurrently
-    prices = get_prices_concurrently(tickers)
+# def get_prices():
+#     # Read tickers from CSV
+#     df = pd.read_csv("stocks.csv")
+#     tickers = df['watchlist1'].tolist()
+#     # Fetch prices for each ticker concurrently
+#     prices = get_prices_concurrently(tickers)
  
-    return jsonify(prices)
+#     return jsonify(prices)
  
- 
- 
- 
-@stockprice_bp.route("/get_prices_wl2", methods=["GET"])
-def get_priceswl2():
-   
-    df = pd.read_csv("stocks.csv")
-    df['watchlist2'] = df['watchlist2'].astype(str)
-    tickers = df['watchlist2'].tolist()
+
+
+@stockprice_bp.route("/get_prices_wl1", methods=["POST"])
+def get_prices_wl1():
+    from demo import mysql
+    data = request.get_json()
+    userid = data.get("userid")
     
-    prices = get_prices_concurrently(tickers)
+    # Create a cursor object
+    mycursor = mysql.connection.cursor()
+
+    # Define the SQL query to get tickers from WL1 for the given userid
+    sql_query = "SELECT stock_name FROM wl1 WHERE userid = %s"
+
+    try:
+        # Execute the query with the userid as a parameter
+        mycursor.execute(sql_query, (userid,))
+
+        # Fetch all the rows
+        result = mycursor.fetchall()
+
+        # Check if result is not empty
+        if not result:
+            return jsonify({"error": "No stocks found for the given userid"}),   404
+
+        # Extract the ticker symbols
+        tickers = [row[0] for row in result]
+
+        # Fetch the current prices for the tickers
+        prices = get_prices_concurrently(tickers)
+
+        return jsonify(prices)
+    
+    except Exception as e:
+        # Log the error or return a message
+        return jsonify({"error": str(e)}),   500
+    finally:
+        # Close the cursor
+        mycursor.close()
+
  
-    return jsonify(prices)
  
+ 
+
+@stockprice_bp.route("/get_prices_wl2", methods=["POST"])
+def get_prices_wl2():
+    from demo import mysql
+    data = request.get_json()
+    userid = data.get("userid")
+    
+    # Create a cursor object
+    mycursor = mysql.connection.cursor()
+
+    # Define the SQL query to get tickers from WL1 for the given userid
+    sql_query = "SELECT stock_name FROM wl2 WHERE userid = %s"
+
+    try:
+        # Execute the query with the userid as a parameter
+        mycursor.execute(sql_query, (userid,))
+
+        # Fetch all the rows
+        result = mycursor.fetchall()
+
+        # Check if result is not empty
+        if not result:
+            return jsonify({"error": "No stocks found for the given userid"}),   404
+
+        # Extract the ticker symbols
+        tickers = [row[0] for row in result]
+
+        # Fetch the current prices for the tickers
+        prices = get_prices_concurrently(tickers)
+
+        return jsonify(prices)
+    
+    except Exception as e:
+        # Log the error or return a message
+        return jsonify({"error": str(e)}),   500
+    finally:
+        # Close the cursor
+        mycursor.close()
+
+
+# @stockprice_bp.route("/get_prices_wl2", methods=["GET"])
+# def get_priceswl2():
+   
+#     df = pd.read_csv("stocks.csv")
+#     df['watchlist2'] = df['watchlist2'].astype(str)
+#     tickers = df['watchlist2'].tolist()
+    
+#     prices = get_prices_concurrently(tickers)
+ 
+#     return jsonify(prices)
+ 
+
+
+  
+@stockprice_bp.route("/download_csv", methods=["GET"])
+def download_csv():
+    url = "https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv"
+    filename = os.path.join(os.getcwd(), "EQUITY_L.csv")
+    download_csv_file(url, filename)
+    return f"File downloaded successfully as '{filename}'."
+ 
+def download_csv_file(url, filename):
+    """
+    Downloads a CSV file from the given URL and saves it with the specified filename.
+   
+    Args:
+    - url (str): The URL of the CSV file to download.
+    - filename (str): The name of the file to save the downloaded CSV data to.
+    """
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Connection': 'keep-alive',
+    }
+    # Send a GET request to the URL with the specified headers
+    response = requests.get(url, headers=headers)
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Open the file in binary write mode and write the content of the response
+        with open(filename, 'wb') as f:
+            f.write(response.content)
+        print(f"File '{filename}' downloaded successfully.")
+    else:
+        print("Failed to download the file.")
+ 
+ 
+ 
+ 
+ 
+@stockprice_bp.route("/get_first_row", methods=["GET"])
+def get_first_row():
+    # Read the CSV file
+    df = pd.read_csv("EQUITY_L.csv")
+   
+    # Convert the first row to a dictionary
+    first_column = df.iloc[:, 0].tolist()
+   
+    # Convert the dictionary to JSON and return
+    return jsonify(first_column)
