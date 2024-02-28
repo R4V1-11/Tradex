@@ -64,7 +64,7 @@ def sell_stock(mysql, ticker, userid, price,quantity, threshold_price):
         if cur.rowcount ==  0: 
             return jsonify({"error": "Not enough stocks to sell."}),  422
 
-        cur.execute("Delete from stock_bid where userid = %s and ticker_symbol = %s and price = %s and actions = 'sell'",(userid, ticker, threshold_price))
+        cur.execute("Delete from stock_bid where userid = %s and ticker_symbol = %s and price = %s and actions = sell",(userid, ticker, threshold_price))
         mysql.connection.commit()
 
         
