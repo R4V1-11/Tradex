@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import   './Login.css';
 const LoginForm = () => {
@@ -7,6 +7,15 @@ const LoginForm = () => {
     password: ""
   });
   const [emailError, setEmailError] = useState("");
+
+
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+  if(user!=null){
+   navigate("/dash")
+  }
+  }, []);
  
   const navigate = useNavigate();
  

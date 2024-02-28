@@ -5,7 +5,7 @@ import "./Navbar.css";
 const Navbar = () => (
   <nav className="navbar-container">
     <NavLink to="/dash" className="brand">
-      TradeX
+      Trade<span style={{color:"red",fontSize:'1.2em'}}>X</span>
     </NavLink>
     <ul className="nav-links">
       <li>

@@ -23,6 +23,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
+
 # MySQL configurations
 CORS(app)
 app.config['MYSQL_HOST'] = os.getenv('HOST')
@@ -44,7 +45,9 @@ def home():
         "age":  23
     }
     return user_data
-
+ChangeinWL = {'value': 0}
+cacheWL1 = {}
+cacheWL2 = {}
 app.register_blueprint(auth_bp)
 app.register_blueprint(stockprice_bp)
 app.register_blueprint(buystock_bp)

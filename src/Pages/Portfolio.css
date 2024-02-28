@@ -86,7 +86,7 @@
   .card{
     width: 75%; 
     padding: 0;
-    border:  3px solid #21CE99;
+    border:  1px solid #21CE99;
     box-shadow:  0  4px  8px  0 rgba(0,  0,  0,  0.2),  0  6px  20px  0 rgba(0,  0,  0,  0.19);
     transition: box-shadow  0.3s ease-in-out;
     margin:  10px;
