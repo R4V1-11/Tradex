@@ -13,6 +13,36 @@ const BuyPage = () => {
   const { ticker, price, userId ,quantitys} = location.state;
   console.log(ticker,price,userId);
   const totalPrice = parseFloat(price2 || price) * quantity;
+  const handlePriceChange = (e) => {
+    // Parse the input value to a number
+    const value = Number(e.target.value);
+    if (e.key === '-') {
+      setPrice2(value);
+   }
+    // Check if the value is not a number or if it's negative
+    if (isNaN(value) || value < 0) {
+       // If the value is not a number or negative, reset the state
+       setPrice2(null);
+    } else {
+       // Otherwise, update the state with the valid value
+       setPrice2(value);
+    }
+   };
+  const handleQuantityChange = (e) => {
+    // Parse the input value to a number
+    const value = Number(e.target.value);
+    if (e.key === '-' || e.key === '.') {
+      e.preventDefault();
+   }
+    // Check if the value is not a number or if it's negative
+    if (isNaN(value) || value < 0) {
+       // If the value is not a number or negative, reset the state
+       setQuantity(null);
+    } else {
+       // Otherwise, update the state with the valid value
+       setQuantity(value);
+    }
+   };
   const handleSubmit = async (event) => {
     event.preventDefault();
     
@@ -111,8 +141,10 @@ console.log(ticker,userid,price,quantity)
                   type="number"
                   id="quantity"
                   name="quantity"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
+                  value={quantity || 1}
+                  onChange={handleQuantityChange}
+                  min="0"
+                  step="1"
                   required
                   className="form-control"
                 />
@@ -136,8 +168,10 @@ console.log(ticker,userid,price,quantity)
                     id="price2"
                     name="price2"
                     placeholder="Set Price"
-                    value={price2 || ''}
-                    onChange={(e) => setPrice2(e.target.value)}
+                    value={price2 || 0}
+                    onChange={handlePriceChange}
+                    min="0"
+                    step="1"
                     className="form-control"
                   />
                 </div>

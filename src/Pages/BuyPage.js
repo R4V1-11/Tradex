@@ -7,12 +7,42 @@ const BuyPage = () => {
   const [price2, setPrice2] = useState(null); // New state for the price in the second card
   const navigate = useNavigate();
   const location = useLocation();
-   
+
   // Retrieve the state passed from the Watchlist1 component
   const { ticker, price, userId } = location.state;
   // Adjust the total price calculation to consider the price from the second card if it's set
   const totalPrice = parseFloat(price2 || price) * quantity;
-
+  const handlePriceChange = (e) => {
+    // Parse the input value to a number
+    const value = Number(e.target.value);
+    if (e.key === '-' ) {
+      setPrice2(value);
+   }
+    // Check if the value is not a number or if it's negative
+    if (isNaN(value) || value < 0) {
+       // If the value is not a number or negative, reset the state
+       setPrice2(null);
+    } else {
+       // Otherwise, update the state with the valid value
+       setPrice2(value);
+    }
+   };
+  const handleQuantityChange = (e) => {
+    // Parse the input value to a number
+    const value = Number(e.target.value);
+    if (e.key === '-' || e.key === '.') {
+      e.preventDefault();
+   }
+    // Check if the value is not a number or if it's negative
+    if (isNaN(value) || value < 0) {
+       // If the value is not a number or negative, reset the state
+       setQuantity(null);
+    } else {
+       // Otherwise, update the state with the valid value
+       setQuantity(value);
+    }
+   };
+   
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -51,13 +81,13 @@ const BuyPage = () => {
 
   const handleSetLimit = async (event) => {
     event.preventDefault();
-console.log("test");
+    console.log("test");
     // Retrieve user ID from localStorage
     const user = JSON.parse(localStorage.getItem('user'));
     const token = user && user.access_token;
     const userid = user && user.user && user.user.id;
 
-console.log(ticker,userid,price,quantity)
+    console.log(ticker, userid, price, quantity)
     try {
       const response = await fetch("http://127.0.0.1:5000/bid_on_stock", {
         method: "POST",
@@ -70,7 +100,7 @@ console.log(ticker,userid,price,quantity)
           userid: userId,
           price: price2 || price, // Use the price from the second card if it's set
           quantity,
-          action:"buy"
+          action: "buy"
 
         })
       });
@@ -91,11 +121,11 @@ console.log(ticker,userid,price,quantity)
 
   return (
     <div className="sell">
-      <Navbar/>
+      <Navbar />
       <div className="container">
         <div className="d-flex justify-content-between">
           <div className="card flex-fill">
-          <div className="card-header">
+            <div className="card-header">
               <h2>Buy Stock: {ticker}</h2>
             </div>
             <div className="card-body">
@@ -108,8 +138,10 @@ console.log(ticker,userid,price,quantity)
                     type="number"
                     id="quantity"
                     name="quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
+                    value={quantity || 1}
+                    onChange={handleQuantityChange}
+                    min="0"
+                    step="1"
                     required
                     className="form-control"
                   />
@@ -117,7 +149,7 @@ console.log(ticker,userid,price,quantity)
                 <button type="submit" className="btn btn-primary">Buy</button>
               </form>
             </div>          </div>
-   
+
           <div className="card flex-fill">
             <div className="card-header">
               <h2>Set Limit Stock: {ticker}</h2>
@@ -133,8 +165,10 @@ console.log(ticker,userid,price,quantity)
                     id="price2"
                     name="price2"
                     placeholder="Set Price"
-                    value={price2 || ''}
-                    onChange={(e) => setPrice2(e.target.value)}
+                    value={price2 || 0}
+                    onChange={handlePriceChange}
+                    min="0"
+                    step="1"
                     className="form-control"
                   />
                 </div>

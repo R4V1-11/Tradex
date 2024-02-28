@@ -15,6 +15,36 @@ const Profile = () => {
  
   const [AddFundsAmount, setAddFundsAmount] = useState(0);
   const [WithdrawFundsAmount, setWithdrawFundsAmount] = useState(0);
+  const handleFundAddChange = (e) => {
+    // Parse the input value to a number
+    if (e.key === '-' || e.key === '.') {
+      e.preventDefault();
+    }
+    // Check if the value is not a number or if it's negative
+    const value = Number(e.target.value);
+    if (isNaN(value) || value < 0) {
+       // If the value is not a number or negative, reset the state
+       setAddFundsAmount(null);
+    } else {
+       // Otherwise, update the state with the valid value
+       setAddFundsAmount(value);
+    }
+   };
+  const handleFundWithdrawChange = (e) => {
+    // Parse the input value to a number
+    if (e.key === '-' || e.key === '.') {
+      e.preventDefault();
+    }
+    const value = Number(e.target.value);
+    // Check if the value is not a number or if it's negative
+    if (isNaN(value) || value < 0) {
+       // If the value is not a number or negative, reset the state
+       setWithdrawFundsAmount(null);
+    } else {
+       // Otherwise, update the state with the valid value
+       setWithdrawFundsAmount(value);
+    }
+   };
   // Function to fetch user data from the backend API
   const fetchUserData = async () => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -72,8 +102,10 @@ const Profile = () => {
         // Update user data after adding funds
         fetchUserData();
         // Optionally, reset the addFundsAmount state
+        alert("Funds Added Successfully")
         setAddFundsAmount(0);
       } else {
+        alert("Failed to add funds")
         console.error("Failed to add funds");
       }
     } catch (error) {
@@ -143,8 +175,8 @@ const Profile = () => {
            <h2>Add Funds</h2>
            <input
              type="number"
-             value={AddFundsAmount}
-             onChange={(e) => setAddFundsAmount(parseFloat(e.target.value))}
+             value={AddFundsAmount || 0}
+             onChange={handleFundAddChange}
            />
            <button className='add-button' onClick={handleAddFunds}>ADD</button>
           </div>
@@ -152,8 +184,8 @@ const Profile = () => {
             <h2>Withdraw Funds</h2>
             <input
               type="number"
-              value={WithdrawFundsAmount}
-              onChange={(e) => setWithdrawFundsAmount(parseFloat(e.target.value))}
+              value={WithdrawFundsAmount || 0}
+              onChange={handleFundWithdrawChange}
             />
             <button className='withdraw-button' onClick={handleWithdrawFunds}>WITHDRAW</button>
           </div>
