@@ -52,17 +52,24 @@ function SearchBox({currentPage }) { // Assuming userid is passed as a prop
       
         // Make the POST request to your server
         fetch('http://127.0.0.1:5000/add_stock_WL', requestOptions)
-          .then(response => response.json())
-          .then(data => {
-            console.log('Success:', data);
-            window.location.reload();
-
-            // Optionally, you can update the UI or state here based on the response
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            // Handle the error appropriately
-          });
+        .then(response => {
+          if (response.ok) {
+              // If the response is OK, parse the JSON and reload the page
+              return response.json().then(data => {
+                  console.log('Success:', data);
+                  window.location.reload();
+              });
+          } else {
+              // If the response is not OK, throw an error to be caught by the catch block
+              alert("Stock already exist in this watchlist")
+              throw new Error('Network response was not ok');
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          
+          // Handle the error appropriately
+      });
       };
       
  

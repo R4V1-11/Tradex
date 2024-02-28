@@ -12,6 +12,8 @@ remove_from_WL_bp = Blueprint('removestock',__name__)
 @jwt_required()
 def remove_stock():
     from demo import mysql
+    from demo import ChangeinWL
+    ChangeinWL['value'] = 1
     data = request.get_json()
     ticker_in = data.get("ticker")
     userid_in = data.get("userId")

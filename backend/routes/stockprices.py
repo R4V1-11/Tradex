@@ -10,6 +10,7 @@ import os
 import requests
 
 
+
 stockprice_bp = Blueprint('stockprice' , __name__)
 def fetch_stock_price(ticker):
     start = time.time()
@@ -46,114 +47,134 @@ def get_prices_concurrently(tickers):
 
 
         
-            
-#return the stock price in the form of list
-# @stockprice_bp.route("/get_prices_wl1", methods=["GET"])
 
-# def get_prices():
-#     # Read tickers from CSV
-#     df = pd.read_csv("stocks.csv")
-#     tickers = df['watchlist1'].tolist()
-#     # Fetch prices for each ticker concurrently
-#     prices = get_prices_concurrently(tickers)
- 
-#     return jsonify(prices)
- 
+
+
+
+
+
+@stockprice_bp.route("/get_prices_wl2", methods=["POST"])
+def get_prices_wl2():
+    from demo import mysql
+    from demo import ChangeinWL, cacheWL2
+    data = request.get_json()
+    userid = data.get("userid")
+    print("stock flag-------------------------", ChangeinWL['value'])
+
+    # Check if ChangeinWL['value'] is 1 or if the cache is empty
+    if ChangeinWL['value'] == 1 or not cacheWL2:
+        # Create a cursor object
+        mycursor = mysql.connection.cursor()
+        print("database operration -----------------------------------------------------------------------------------------------------")
+        # Define the SQL query to get tickers from WL1 for the given userid
+        sql_query = "SELECT stock_name FROM wl2 WHERE userid = %s"
+
+        try:
+            # Execute the query with the userid as a parameter
+            mycursor.execute(sql_query, (userid,))
+
+            # Fetch all the rows
+            result = mycursor.fetchall()
+
+            # Check if result is not empty
+            if not result:
+                return jsonify({"error": "No stocks found for the given userid"}), 404
+
+            # Extract the ticker symbols
+            tickers = [row[0] for row in result]
+
+            # Fetch the current prices for the tickers
+            prices = get_prices_concurrently(tickers)
+
+            # Store the fetched data in the cache, including the userid
+            cacheWL2[userid] = {'userid': userid, 'prices': prices}
+            ChangeinWL['value'] = 0
+
+            return jsonify(prices)
+        
+        except Exception as e:
+            # Log the error or return a message
+            return jsonify({"error": str(e)}), 500
+        finally:
+            # Close the cursor
+            mycursor.close()
+    else:
+        # Return the cached data
+        cached_data = cacheWL2.get(userid, {'userid': userid, 'prices': []})
+        tickers = cached_data.get('prices', [])
+        prices = get_prices_concurrently(tickers)
+
+        return jsonify(prices)
+
+
+
+
+
+
 
 
 @stockprice_bp.route("/get_prices_wl1", methods=["POST"])
 def get_prices_wl1():
     from demo import mysql
+    from demo import ChangeinWL, cacheWL1
     data = request.get_json()
     userid = data.get("userid")
-    
-    # Create a cursor object
-    mycursor = mysql.connection.cursor()
+    print("stock flag-------------------------", ChangeinWL['value'])
 
-    # Define the SQL query to get tickers from WL1 for the given userid
-    sql_query = "SELECT stock_name FROM wl1 WHERE userid = %s"
+    # Check if ChangeinWL['value'] is 1 or if the cache is empty
+    if ChangeinWL['value'] == 1 or not cacheWL1:
+        # Create a cursor object
+        mycursor = mysql.connection.cursor()
+        print("database operration -----------------------------------------------------------------------------------------------------")
+        # Define the SQL query to get tickers from WL1 for the given userid
+        sql_query = "SELECT stock_name FROM wl1 WHERE userid = %s"
 
-    try:
-        # Execute the query with the userid as a parameter
-        mycursor.execute(sql_query, (userid,))
+        try:
+            # Execute the query with the userid as a parameter
+            mycursor.execute(sql_query, (userid,))
 
-        # Fetch all the rows
-        result = mycursor.fetchall()
+            # Fetch all the rows
+            result = mycursor.fetchall()
 
-        # Check if result is not empty
-        if not result:
-            return jsonify({"error": "No stocks found for the given userid"}),   404
+            # Check if result is not empty
+            if not result:
+                return jsonify({"error": "No stocks found for the given userid"}), 404
 
-        # Extract the ticker symbols
-        tickers = [row[0] for row in result]
+            # Extract the ticker symbols
+            tickers = [row[0] for row in result]
 
-        # Fetch the current prices for the tickers
+            # Fetch the current prices for the tickers
+            prices = get_prices_concurrently(tickers)
+
+            # Store the fetched data in the cache, including the userid
+            cacheWL1[userid] = {'userid': userid, 'prices': prices}
+            ChangeinWL['value'] = 0
+
+            return jsonify(prices)
+        
+        except Exception as e:
+            # Log the error or return a message
+            return jsonify({"error": str(e)}), 500
+        finally:
+            # Close the cursor
+            mycursor.close()
+    else:
+        # Return the cached data
+        cached_data = cacheWL1.get(userid, {'userid': userid, 'prices': []})
+        tickers = cached_data.get('prices', [])
         prices = get_prices_concurrently(tickers)
 
         return jsonify(prices)
-    
-    except Exception as e:
-        # Log the error or return a message
-        return jsonify({"error": str(e)}),   500
-    finally:
-        # Close the cursor
-        mycursor.close()
+
+
+
+
+
+
+
+
 
  
- 
- 
-
-@stockprice_bp.route("/get_prices_wl2", methods=["POST"])
-def get_prices_wl2():
-    from demo import mysql
-    data = request.get_json()
-    userid = data.get("userid")
-    
-    # Create a cursor object
-    mycursor = mysql.connection.cursor()
-
-    # Define the SQL query to get tickers from WL1 for the given userid
-    sql_query = "SELECT stock_name FROM wl2 WHERE userid = %s"
-
-    try:
-        # Execute the query with the userid as a parameter
-        mycursor.execute(sql_query, (userid,))
-
-        # Fetch all the rows
-        result = mycursor.fetchall()
-
-        # Check if result is not empty
-        if not result:
-            return jsonify({"error": "No stocks found for the given userid"}),   404
-
-        # Extract the ticker symbols
-        tickers = [row[0] for row in result]
-
-        # Fetch the current prices for the tickers
-        prices = get_prices_concurrently(tickers)
-
-        return jsonify(prices)
-    
-    except Exception as e:
-        # Log the error or return a message
-        return jsonify({"error": str(e)}),   500
-    finally:
-        # Close the cursor
-        mycursor.close()
-
-
-# @stockprice_bp.route("/get_prices_wl2", methods=["GET"])
-# def get_priceswl2():
-   
-#     df = pd.read_csv("stocks.csv")
-#     df['watchlist2'] = df['watchlist2'].astype(str)
-#     tickers = df['watchlist2'].tolist()
-    
-#     prices = get_prices_concurrently(tickers)
- 
-#     return jsonify(prices)
- 
-
 
   
 @stockprice_bp.route("/download_csv", methods=["GET"])
