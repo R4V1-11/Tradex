@@ -49,7 +49,7 @@ const LoginForm = () => {
     event.preventDefault();
     const { email, password } = formData;
  
-    const loginEndpoint = "http://10.50.10.252:5000/login";
+    const loginEndpoint = `${process.env.REACT_APP_API_URL}/login`;
  
     try {
       const response = await fetch(loginEndpoint, {

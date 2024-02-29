@@ -12,7 +12,7 @@ function Downloadbtn() {
         const userid = user && user.user && user.user.id;
         console.log(userid);
         try {
-            const response = await fetch("http://10.50.10.252:5000/get_history_by_userid", {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/get_history_by_userid`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

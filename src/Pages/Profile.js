@@ -54,7 +54,7 @@ const Profile = () => {
     console.log(userid)
     try {
       // Replace with your actual API endpoint
-      const response = await fetch("http://10.50.10.252:5000/get_fund_by_userid", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/get_fund_by_userid`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ const Profile = () => {
     const userid = user && user.user && user.user.id;
     try {
       // Replace with your actual API endpoint
-      const response = await fetch("http://10.50.10.252:5000/add_fund_by_userid", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/add_fund_by_userid`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -122,7 +122,7 @@ const Profile = () => {
     const userid = user && user.user && user.user.id;
     try {
       // Replace with your actual API endpoint
-      const response = await fetch("http://10.50.10.252:5000/withdraw_fund_by_userid", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/withdraw_fund_by_userid`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

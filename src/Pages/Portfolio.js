@@ -50,7 +50,7 @@ const StockList = () => {
       console.log(userid)
 
       try {
-        const response = await fetch('http://10.50.10.252:5000/get_stock_by_userid', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/get_stock_by_userid`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

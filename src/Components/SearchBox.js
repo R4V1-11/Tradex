@@ -13,7 +13,7 @@ function SearchBox({currentPage }) { // Assuming userid is passed as a prop
     const userid = user && user.user && user.user.id;
     useEffect(() => {
       if (inputValue.length >  0) {
-        fetch('http://10.50.10.252:5000/get_first_row')
+        fetch(`${process.env.REACT_APP_API_URL}/get_first_row`)
           .then(response => response.json())
           .then(data => setSuggestions(data))
           .catch(error => console.error('Error fetching data:', error));
@@ -53,7 +53,7 @@ function SearchBox({currentPage }) { // Assuming userid is passed as a prop
         };
       
         // Make the POST request to your server
-        fetch('http://10.50.10.252:5000/add_stock_WL', requestOptions)
+        fetch(`${process.env.REACT_APP_API_URL}/add_stock_WL`, requestOptions)
         .then(response => {
           if (response.ok) {
               // If the response is OK, parse the JSON and reload the page

@@ -27,7 +27,7 @@ const Watchlist1 = () => {
         const token = user && user.access_token;
         const userid = user && user.user && user.user.id;
        // console.log(token)
-        const response = await fetch("http://10.50.10.252:5000/get_prices_wl1", {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/get_prices_wl1`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -94,7 +94,7 @@ const Watchlist1 = () => {
     };
   
     // Make the POST request to your server
-    fetch('http://10.50.10.252:5000/remove_stock_WL', requestOptions)
+    fetch(`${process.env.REACT_APP_API_URL}/remove_stock_WL`, requestOptions)
       .then(response => response.json())
       .then(data => {
         console.log('Success:', data);

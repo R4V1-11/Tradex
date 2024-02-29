@@ -16,7 +16,7 @@ const Order = () => {
     const userid = user && user.user && user.user.id;
     try {
       // Replace with your actual API endpoint
-      const response = await fetch("http://10.50.10.252:5000/openorders", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/openorders`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const Order = () => {
     };
   
     // Make the POST request to your server
-    fetch('http://10.50.10.252:5000/removeorders', requestOptions)
+    fetch(`${process.env.REACT_APP_API_URL}/removeorders`, requestOptions)
       .then(response => response.json())
       .then(data => {
         console.log('Success:', data);
