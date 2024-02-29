@@ -33,7 +33,7 @@ def buy_stock(mysql,ticker, userid, price,quantity, threshold_price):
     try:
         
         cursor.callproc('UpdateStockAndTransactionHistory', (ticker, userid, price, quantity))
-        cursor.execute("Delete from stock_bid where userid = %s and ticker_symbol = %s and price = %s and actions = 'buy'",(userid, ticker, threshold_price))
+        cursor.execute("Delete from stock_bid where userid = %s and ticker_symbol = %s and price = %s and actions = buy",(userid, ticker, threshold_price))
         
         mysql.connection.commit()
 
@@ -93,7 +93,7 @@ def check_price_below_threshold(mysql,app):
                 if stock_price >= threshold_price and action == "sell":
                     print("sold")
                     sell_stock(mysql,stock["ticker"],stock["userid"],stock_price,stock["quantity"], threshold_price)
-            time.sleep(60)
+            time.sleep(15)
 
 
 

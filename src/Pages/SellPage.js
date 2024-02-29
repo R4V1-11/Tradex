@@ -16,32 +16,45 @@ const BuyPage = () => {
   const totalPrice = parseFloat(price2 || price) * quantity;
   const handlePriceChange = (e) => {
     // Parse the input value to a number
-    const value = Number(e.target.value);
-    if (e.key === '-') {
-      setPrice2(value);
-   }
-    // Check if the value is not a number or if it's negative
-    if (isNaN(value) || value < 0) {
-       // If the value is not a number or negative, reset the state
-       setPrice2(null);
+      // Check if the backspace key is pressed and the input is empty or contains a single digit
+      if (e.keyCode === 8 && (e.target.value === '' || e.target.value.length === 1) || e.nativeEvent.data == '-') {
+        // Clear the input field
+        console.log(e.key)
+        e.target.value = '';
+        setPrice2(null); // Assuming setPrice2 updates your state
     } else {
-       // Otherwise, update the state with the valid value
-       setPrice2(value);
-    }
-   };
+        // Parse the input value to a number
+        const value = Number(e.target.value);
+       
+        // Check if the value is not a number or if it's negative
+        if (isNaN(value) || value < 0) {
+            // If the value is not a number or negative, reset the state
+            setPrice2(null);
+        } else {
+            // Otherwise, update the state with the valid value
+            setPrice2(value);
+        }
+      }
+     };
   const handleQuantityChange = (e) => {
     // Parse the input value to a number
-    const value = Number(e.target.value);
-    if (e.key === '-' || e.key === '.') {
-      e.preventDefault();
-   }
-    // Check if the value is not a number or if it's negative
-    if (isNaN(value) || value < 0) {
-       // If the value is not a number or negative, reset the state
-       setQuantity(null);
-    } else {
-       // Otherwise, update the state with the valid value
-       setQuantity(value);
+    // Check if the backspace key is pressed and the input is empty or contains a single digit
+    if (e.keyCode === 8 && (e.target.value === '' || e.target.value.length === 1) || e.key === '-') {
+      // Clear the input field
+      e.target.value = '';
+      setQuantity(null); // Assuming setQuantity updates your state
+  } else {
+      // Parse the input value to a number
+      const value = Number(e.target.value);
+     
+      // Check if the value is not a number or if it's negative
+      if (isNaN(value) || value < 0) {
+          // If the value is not a number or negative, reset the state
+          setQuantity(null);
+      } else {
+          // Otherwise, update the state with the valid value
+          setQuantity(value);
+      }
     }
    };
   const handleSubmit = async (event) => {
@@ -142,7 +155,7 @@ console.log(ticker,userid,price,quantity)
                   type="number"
                   id="quantity"
                   name="quantity"
-                  value={quantity || 1}
+                  value={quantity || ''}
                   onChange={handleQuantityChange}
                   min="0"
                   step="1"
@@ -169,7 +182,7 @@ console.log(ticker,userid,price,quantity)
                     id="price2"
                     name="price2"
                     placeholder="Set Price"
-                    value={price2 || 0}
+                    value={price2 || ''}
                     onChange={handlePriceChange}
                     min="0"
                     step="1"
