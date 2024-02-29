@@ -3,11 +3,32 @@
     border: none;
     margin-top: 100px;
     width: 60%;
-    margin-left: 20%;
+    /* margin-left: 20%; */
     outline: none;
  
 }
+ .circle{
+    margin-top: 100px;
+    background-color: white;
+    /* margin-left: 10px; */
+    font-size: 30px;
+    /* width: 30px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    right: 35px;
+    bottom: 3px;
  
+ }
+ .input{
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    /* border: 2px solid white; */
+ }
 .Lists{
     background-color:aquamarine;
     margin-left: 20%;
@@ -33,6 +54,7 @@
     padding: 10px;
     background-color: black;
     border-radius: 5px ;
+ 
    
 }
 .btn{

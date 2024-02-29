@@ -15,7 +15,6 @@ def add_fund():
     print(userid)
     print(fund)
  
-    # Calling the procedure
     cursor = mysql.connection.cursor()
     cursor.callproc('AddUserFund', [userid, fund])
     mysql.connection.commit()

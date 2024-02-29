@@ -16,7 +16,7 @@ const TransactionHistory = () => {
     const userid = user && user.user && user.user.id;
     try {
       // Replace with your actual API endpoint
-      const response = await fetch("http://localhost:5000/get_history_by_userid", {
+      const response = await fetch("http://10.50.10.252:5000/get_history_by_userid", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',

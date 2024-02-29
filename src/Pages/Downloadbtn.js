@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './Download.css';
 import { CSVLink } from 'react-csv';
  
@@ -12,7 +12,7 @@ function Downloadbtn() {
         const userid = user && user.user && user.user.id;
         console.log(userid);
         try {
-            const response = await fetch("http://localhost:5000/get_history_by_userid", {
+            const response = await fetch("http://10.50.10.252:5000/get_history_by_userid", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,7 +33,9 @@ function Downloadbtn() {
             console.error("An error occurred during transaction history fetch:", error);
         }
     };
-    downloaddata();
+    useEffect(()=>{
+        downloaddata();
+    },[])
  
     // Ensure transactionHistory is structured correctly for CSVLink
     const csvData = transactionHistory.map(item => ({

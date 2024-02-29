@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import os
 from flask import Blueprint
 from routes.auth import auth_bp
-from routes.stockprices import stockprice_bp
+from routes.stockprices import stockprice_bp, download_csv
 from routes.sell_stock import sellstock_bp
 from routes.buy_stock import buystock_bp
 from routes.addFunds import addfund_bp
@@ -18,6 +18,8 @@ from routes.add_stocks_to_WL import add_to_WL_bp
 from threading import Thread
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+from apscheduler.schedulers.background import BackgroundScheduler
+
 
 load_dotenv()
 
@@ -45,6 +47,16 @@ def home():
         "age":  23
     }
     return user_data
+
+
+
+
+def schedule_weekly_task():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(download_csv, 'cron', day_of_week='thu')
+    scheduler.start()
+
+
 ChangeinWL = {'value': 0}
 cacheWL1 = {}
 cacheWL2 = {}
@@ -62,4 +74,6 @@ app.register_blueprint(bidstock_bp)
 if __name__ == "__main__":
     background_thread = Thread(target=check_price_below_threshold, args=(mysql, app))
     background_thread.start()
-    app.run(debug=True)
+    schedule_weekly_task()
+    app.run(host='0.0.0.0', debug=True)
+    # app.run(debug=True)

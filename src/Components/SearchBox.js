@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "./Search.css"
+import { FaSearch } from "react-icons/fa";
+
  
 function SearchBox({currentPage }) { // Assuming userid is passed as a prop
     const [inputValue, setInputValue] = useState('');
@@ -11,7 +13,7 @@ function SearchBox({currentPage }) { // Assuming userid is passed as a prop
     const userid = user && user.user && user.user.id;
     useEffect(() => {
       if (inputValue.length >  0) {
-        fetch('http://127.0.0.1:5000/get_first_row')
+        fetch('http://10.50.10.252:5000/get_first_row')
           .then(response => response.json())
           .then(data => setSuggestions(data))
           .catch(error => console.error('Error fetching data:', error));
@@ -51,7 +53,7 @@ function SearchBox({currentPage }) { // Assuming userid is passed as a prop
         };
       
         // Make the POST request to your server
-        fetch('http://127.0.0.1:5000/add_stock_WL', requestOptions)
+        fetch('http://10.50.10.252:5000/add_stock_WL', requestOptions)
         .then(response => {
           if (response.ok) {
               // If the response is OK, parse the JSON and reload the page
@@ -75,12 +77,19 @@ function SearchBox({currentPage }) { // Assuming userid is passed as a prop
  
     return (
       <div>
+       <div className='input'>
         <input id='inputSearch'
           type="text"
           placeholder="Search..."
           value={inputValue}
           onChange={handleInputChange}
+          name="inputSearch"
+         
         />
+        <label className='circle'  htmlFor="inputSearch">
+           <FaSearch  />
+        </label>
+        </div>
         {inputValue.length >  0 && (
           <ul className='Lists'>
             {filteredSuggestions.map((suggestion, index) => (

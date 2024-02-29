@@ -16,14 +16,11 @@ bidstock_bp = Blueprint('bidstock' , __name__)
 
 
 def fetch_stocks_from_db(mysql):
-    # Placeholder for fetching stocks from the database
-    # This should be replaced with actual database query logic
-
+  
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM stock_bid")
     result = cur.fetchall()
     column_names = ["id", "userid" ,"ticker", "price", "quantity", "action"]
-    # Convert the list of lists into a list of dictionaries
     stocks = [dict(zip(column_names, row)) for row in result]
     return stocks
 
@@ -155,11 +152,9 @@ def get_orders():
    
     userid = data['userid']
     print(userid)
-    # Connect to the database
     
     cursor = mysql.connection.cursor()
     sql_query ="SELECT * FROM stock_bid WHERE userid = %s"
-    # Execute the SQL query
     try:
         cursor.execute(sql_query, (userid,))
         result = cursor.fetchall()
@@ -187,7 +182,6 @@ def remove_orders():
     from demo import mysql
     cursor = mysql.connection.cursor()
  
-    # Execute the SQL query
     try:
         cursor.execute("DELETE FROM stock_bid WHERE userid = %s and ticker_symbol = %s and price = %s and actions = %s", (userid, ticker_name, price, action))
         mysql.connection.commit()

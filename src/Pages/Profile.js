@@ -54,7 +54,7 @@ const Profile = () => {
     console.log(userid)
     try {
       // Replace with your actual API endpoint
-      const response = await fetch("http://localhost:5000/get_fund_by_userid", {
+      const response = await fetch("http://10.50.10.252:5000/get_fund_by_userid", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ const Profile = () => {
     const userid = user && user.user && user.user.id;
     try {
       // Replace with your actual API endpoint
-      const response = await fetch("http://localhost:5000/add_fund_by_userid", {
+      const response = await fetch("http://10.50.10.252:5000/add_fund_by_userid", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -122,7 +122,7 @@ const Profile = () => {
     const userid = user && user.user && user.user.id;
     try {
       // Replace with your actual API endpoint
-      const response = await fetch("http://localhost:5000/withdraw_fund_by_userid", {
+      const response = await fetch("http://10.50.10.252:5000/withdraw_fund_by_userid", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -137,6 +137,7 @@ const Profile = () => {
         // Optionally, reset the addFundsAmount state
         alert("Fund Withdrawn Successfully")
         setWithdrawFundsAmount(0);
+        console.log(user.id)
       } else {
         alert("Not Enough Fund")
         console.error("Failed to Withdraw funds");

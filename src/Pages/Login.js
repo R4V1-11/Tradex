@@ -1,5 +1,7 @@
 import React, { useState ,useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaEye } from "react-icons/fa";
+import { FaRegEyeSlash } from "react-icons/fa6";
 import   './Login.css';
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -7,7 +9,11 @@ const LoginForm = () => {
     password: ""
   });
   const [emailError, setEmailError] = useState("");
+  const[openeye,setopeneye]=useState(false);
 
+  function Openeye() {
+    setopeneye(!openeye);
+  }
 
 
   useEffect(() => {
@@ -43,7 +49,7 @@ const LoginForm = () => {
     event.preventDefault();
     const { email, password } = formData;
  
-    const loginEndpoint = "http://127.0.0.1:5000/login";
+    const loginEndpoint = "http://10.50.10.252:5000/login";
  
     try {
       const response = await fetch(loginEndpoint, {
@@ -92,21 +98,27 @@ const LoginForm = () => {
           <form className="form" onSubmit={handleLogin}>
             <div className="form-group">
               <label htmlFor="email" style={{color: 'azure'}}>Email</label>
+              <div className="inp">
               <input
                 type="email"
                 id="email"
-                className="formFieldInput"style={{color:"azure"}}
+                className="formFieldInput" style={{color:"azure"}}
                 placeholder="Enter your email"
                 name="email"
                 required
                 onChange={handleChange}
               />
+              <div></div>
+              </div>
               {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
             </div>
             <div className="form-group">
               <label htmlFor="password" style={{color: 'azure'}}>Password</label>
+              <div className="inp">
               <input
-                type="password"
+               
+               
+                type={openeye ? "text" : "password"}
                 id="password"
                 className="formFieldInput" style={{color:"azure"}}
                 placeholder="Enter your password"
@@ -115,7 +127,10 @@ const LoginForm = () => {
                 value={formData.password}
                 onChange={handleChange}
               />
+               <p className="icon" onClick={Openeye}>{!openeye?<FaEye></FaEye>:<FaRegEyeSlash />}</p>
+               </div>
             </div>
+         
             <div className="form-group">
               <button type="submit" className="btn btn-primary">
                 LOGIN

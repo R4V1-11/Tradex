@@ -22,7 +22,7 @@ const Watchlist2 = () => {
         const user = JSON.parse(localStorage.getItem("user"));
         const token = user && user.access_token;
         const userid = user && user.user && user.user.id;
-        const response = await fetch("http://127.0.0.1:5000/get_prices_wl2", {
+        const response = await fetch("http://10.50.10.252:5000/get_prices_wl2", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -85,7 +85,7 @@ const Watchlist2 = () => {
     };
   
     // Make the POST request to your server
-    fetch('http://127.0.0.1:5000/remove_stock_WL', requestOptions)
+    fetch('http://10.50.10.252:5000/remove_stock_WL', requestOptions)
       .then(response => response.json())
       .then(data => {
         console.log('Success:', data);

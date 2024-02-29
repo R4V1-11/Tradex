@@ -51,7 +51,7 @@ const BuyPage = () => {
     const token = user && user.access_token;
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/buy_stock", {
+      const response = await fetch("http://10.50.10.252:5000/buy_stock", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const BuyPage = () => {
 
     console.log(ticker, userid, price, quantity)
     try {
-      const response = await fetch("http://127.0.0.1:5000/bid_on_stock", {
+      const response = await fetch("http://10.50.10.252:5000/bid_on_stock", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

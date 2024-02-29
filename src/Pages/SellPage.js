@@ -3,9 +3,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 
 
+
 const BuyPage = () => {
-  const [quantity, setQuantity] = useState(0);
-  const [price2, setPrice2] = useState(null); 
+  const [quantity, setQuantity] = useState(1);
+  const [price2, setPrice2] = useState(1); 
   const navigate = useNavigate();
   const location = useLocation();
  
@@ -52,7 +53,7 @@ const BuyPage = () => {
     const token = user && user.access_token;
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/sell_stock", {
+      const response = await fetch("http://10.50.10.252:5000/sell_stock", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +92,7 @@ console.log("test");
 
 console.log(ticker,userid,price,quantity)
     try {
-      const response = await fetch("http://127.0.0.1:5000/bid_on_stock", {
+      const response = await fetch("http://10.50.10.252:5000/bid_on_stock", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
