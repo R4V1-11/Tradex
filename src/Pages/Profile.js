@@ -16,33 +16,33 @@ const Profile = () => {
   const [AddFundsAmount, setAddFundsAmount] = useState(0);
   const [WithdrawFundsAmount, setWithdrawFundsAmount] = useState(0);
   const handleFundAddChange = (e) => {
-    // Parse the input value to a number
-    if (e.key === '-' || e.key === '.') {
-      e.preventDefault();
+           // Ensure there's only one "."
+    e.target.value = e.target.value.replace(/(\..*)\./g, '$1');
+           // Prevent the first character from being a "."
+    if (e.target.value.startsWith('.')) {
+      e.target.value = '0'+ e.target.value ;
     }
-    // Check if the value is not a number or if it's negative
-    const value = Number(e.target.value);
+    const value = e.target.value=== ''? null : Number(e.target.value);
     if (isNaN(value) || value < 0) {
-       // If the value is not a number or negative, reset the state
-       setAddFundsAmount(null);
+      setAddFundsAmount(null); 
+      e.target.value =  '';
     } else {
-       // Otherwise, update the state with the valid value
-       setAddFundsAmount(value);
+      setAddFundsAmount(value);
     }
    };
   const handleFundWithdrawChange = (e) => {
-    // Parse the input value to a number
-    if (e.key === '-' || e.key === '.') {
-      e.preventDefault();
+           // Ensure there's only one "."
+    e.target.value = e.target.value.replace(/(\..*)\./g, '$1');
+           // Prevent the first character from being a "."
+    if (e.target.value.startsWith('.')) {
+      e.target.value = '0'+ e.target.value ;
     }
-    const value = Number(e.target.value);
-    // Check if the value is not a number or if it's negative
+    const value = e.target.value=== ''? null : Number(e.target.value);
     if (isNaN(value) || value < 0) {
-       // If the value is not a number or negative, reset the state
-       setWithdrawFundsAmount(null);
+      e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+      setWithdrawFundsAmount(null); 
     } else {
-       // Otherwise, update the state with the valid value
-       setWithdrawFundsAmount(value);
+      setWithdrawFundsAmount(value);
     }
    };
   // Function to fetch user data from the backend API
@@ -87,6 +87,16 @@ const Profile = () => {
     const token = user && user.access_token;
  
     const userid = user && user.user && user.user.id;
+    if(AddFundsAmount===0){
+      alert("Funds Amount should be greater than 0")
+      setAddFundsAmount(0);
+      return
+    }
+    if(AddFundsAmount === null){
+      alert("Invalid Funds amount")
+      setAddFundsAmount(0);
+      return
+    }
     try {
       // Replace with your actual API endpoint
       const response = await fetch(`${process.env.REACT_APP_API_URL}/add_fund_by_userid`, {
@@ -118,7 +128,16 @@ const Profile = () => {
     const user = JSON.parse(localStorage.getItem('user'));
     // Extract the userid from the user object
     const token = user && user.access_token;
- 
+    if(WithdrawFundsAmount===0){
+      alert("Funds Amount should be greater than 0")
+      setWithdrawFundsAmount(0);
+      return
+    }
+    if(WithdrawFundsAmount === null){
+      alert("Invalid Funds amount")
+      setWithdrawFundsAmount(0);
+      return
+    }
     const userid = user && user.user && user.user.id;
     try {
       // Replace with your actual API endpoint
@@ -176,8 +195,11 @@ const Profile = () => {
            <h2>Add Funds</h2>
            <input
              type="number"
-             value={AddFundsAmount || 0}
+             value={AddFundsAmount === null ? '': AddFundsAmount}
              onChange={handleFundAddChange}
+             min="0"
+             step="1"
+             required
            />
            <button className='add-button' onClick={handleAddFunds}>ADD</button>
           </div>
@@ -185,8 +207,11 @@ const Profile = () => {
             <h2>Withdraw Funds</h2>
             <input
               type="number"
-              value={WithdrawFundsAmount || 0}
+              value={WithdrawFundsAmount === null ? '': WithdrawFundsAmount}
               onChange={handleFundWithdrawChange}
+              min="0"
+              step="1"
+              required
             />
             <button className='withdraw-button' onClick={handleWithdrawFunds}>WITHDRAW</button>
           </div>
