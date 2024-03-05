@@ -3,7 +3,8 @@ import "./Search.css"
 import { FaSearch } from "react-icons/fa";
 
  
-function SearchBox({currentPage }) { // Assuming userid is passed as a prop
+function SearchBox({currentPage, watchlistStocks }) { // Assuming userid is passed as a prop
+  // console.log(watchlistStocks)
     const [inputValue, setInputValue] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const user = JSON.parse(localStorage.getItem('user'));
@@ -25,19 +26,24 @@ function SearchBox({currentPage }) { // Assuming userid is passed as a prop
     const handleInputChange = (event) => {
       setInputValue(event.target.value);
     };
- 
+    const isInWatchlist = (ticker) => {
+      if(watchlistStocks.some(stock => stock.ticker === ticker) || watchlistStocks.includes(ticker)){
+        console.log(ticker)
+      }
+      return watchlistStocks.includes(ticker);
+   };
     const filteredSuggestions = suggestions.filter(suggestion =>
-      suggestion.toLowerCase().includes(inputValue.toLowerCase())
+      suggestion.toLowerCase().startsWith(inputValue.toLowerCase())
     );
  
     const Addstocks = (suggestion, userid, currentPage) => {
         // Define the data you want to send to the server
         const data = {
-            ticker: suggestion,
+          ticker: suggestion,
           userId: userid,
           WL_no: currentPage
         };
-       console.log(data);
+      //  console.log(data);
         // Convert the data to JSON format
         const jsonData = JSON.stringify(data);
       
@@ -73,6 +79,43 @@ function SearchBox({currentPage }) { // Assuming userid is passed as a prop
           // Handle the error appropriately
       });
       };
+    
+      const RemoveStockFromWL = (suggestion, userid, currentPage) => {
+        // Define the data you want to send to the server
+        
+        const data = {
+            ticker: suggestion  + '.NS',
+          userId: userid,
+          WL_no: currentPage
+        };
+       console.log(data);
+        // Convert the data to JSON format
+        const jsonData = JSON.stringify(data);
+      
+        // Define the request options
+        const requestOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // Include the token in the Authorization header if needed
+            'Authorization': `Bearer ${token}`
+          },
+          body: jsonData
+        };
+      
+        // Make the POST request to your server
+        fetch(`${process.env.REACT_APP_API_URL}/remove_stock_WL`, requestOptions)
+          .then(response => response.json())
+          .then(data => {
+            console.log('Success:', data);
+            window.location.reload();
+            // Optionally, you can update the UI or state here based on the response
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            // Handle the error appropriately
+          });
+      };
       
  
     return (
@@ -93,7 +136,13 @@ function SearchBox({currentPage }) { // Assuming userid is passed as a prop
         {inputValue.length >  0 && (
           <ul className='Lists'>
             {filteredSuggestions.map((suggestion, index) => (
-              <li key={index} id='stocks'>{suggestion} <button className='btn' onClick={() => Addstocks(suggestion, userid,currentPage)}>+</button></li>
+              <li key={index} id='stocks'>
+                {suggestion}
+                {isInWatchlist(suggestion) ? (
+                <button className='btn remove-btn' onClick={() => RemoveStockFromWL(suggestion, userid, currentPage)}>-</button>
+              ) : (
+                <button className='btn add-btn' onClick={() => Addstocks(suggestion, userid, currentPage)}>+</button>
+              )}</li>
             ))}
           </ul>
         )}

@@ -60,13 +60,6 @@
     background-color: #21CE99;
     border-color: #21CE99;
   }
-  .profit {
-    color: green;
-  }
-  
-  .loss {
-    color: red;
-  }
   .subtotal-container {
     display: flex;
     justify-content: space-around;
@@ -81,7 +74,7 @@
     margin-top: 60px;
   }
 
-
+  
   
   .card{
     width: 75%; 
@@ -94,8 +87,27 @@
     background-color :black;
   }
   
-  .card:hover {
-    box-shadow:  0 0 5px  5px #21CE99;
+  .border-green{
+    border: 2px solid #21CE99;
+    /* background-color: #21ce9a89; */
+  }
+  .border-red{
+    border: 2px solid #f15252;
+    /* background-color:  #f1525295; */
+  }
+  .profit {
+    color: green;
+    
+  }
+  
+  .loss {
+    color: red;
+  }
+  .border-green:hover {
+    box-shadow:  0 0 5px 5px #21CE99;
+  }
+  .border-red:hover{
+    box-shadow:  0 0 5px 5px #f15252;
   }
   
   .container-fluid {

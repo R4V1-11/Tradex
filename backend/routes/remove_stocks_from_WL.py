@@ -18,7 +18,9 @@ def remove_stock():
     ticker_in = data.get("ticker")
     userid_in = data.get("userId")
     wl_no_in = data.get("WL_no")
+    print("Inside remove Stock Function---->>>>>>>>>")
     print(ticker_in, userid_in, wl_no_in)
+    print(type(ticker_in), type(userid_in), type(wl_no_in))
     cursor = mysql.connection.cursor()
  
     try:

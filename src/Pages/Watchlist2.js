@@ -8,6 +8,7 @@ const Watchlist2 = () => {
   const [stockData, setStockData] = useState([]);
   const navigate = useNavigate();
   const [Loading, SetisLoading] = useState(true);
+  const [stockNamesArray, setStockNamesArray] = useState([]);
  
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -32,6 +33,8 @@ const Watchlist2 = () => {
         });
         if (response.ok) {
           const data = await response.json();
+          const namesArray = Object.keys(data).map(stockName => stockName.replace('.NS', ''));
+          setStockNamesArray(namesArray);
           setStockData(data);
         } else {
           console.error("Failed to fetch stock prices");
@@ -102,7 +105,7 @@ const Watchlist2 = () => {
   return (
     <div>
       <Navbar />
-      <SearchBox currentPage="2"></SearchBox>
+      <SearchBox currentPage="2" watchlistStocks={stockNamesArray}/>
       <div className="container">
         { Loading ? (
           <div className="Loading-Container"></div>

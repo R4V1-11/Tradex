@@ -59,5 +59,11 @@
 }
 .btn{
     border: 1px solid black;
+}
+.remove-btn{
+    background-color: rgb(248, 44, 44);
+}
+.add-btn{
     background-color: #81eb7a;
+
 }

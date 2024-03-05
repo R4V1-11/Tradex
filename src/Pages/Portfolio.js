@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from "../Components/Navbar";
 import { Link,useNavigate } from "react-router-dom";
 import './Portfolio.css'
+import DownloadPortfolio from './downloadPortfolio'
 
 
 const StockList = () => {
@@ -83,6 +84,7 @@ const StockList = () => {
   return (
     <div className='Background'>
       <Navbar/>
+      <DownloadPortfolio></DownloadPortfolio>
       
       <div className="subtotal-container">
         <h5> Invested : {originalSubtotal.toFixed(2)}</h5>
@@ -98,9 +100,10 @@ const StockList = () => {
         {stocks.map((stock, index) => {
           const profitOrLoss = stock.current_price * stock.quantity - stock.price * stock.quantity;
           const profitOrLossClass = profitOrLoss >  0 ? 'profit' : 'loss';
+          const cardBorderColor = profitOrLossClass === 'profit' ? 'border-green' : 'border-red';
 
           return (
-            <div  className="card mb-3" key={index}>
+            <div  className= {`card mb-3 ${cardBorderColor}`} key={index}>
               <div className="card-body">
                 <h5 className="card-title">{stock.ticker}</h5>
                 <div className='row'>
