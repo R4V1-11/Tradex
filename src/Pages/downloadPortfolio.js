@@ -71,7 +71,7 @@ function DownloadPortfolio() {
                 {/* Conditionally render CSVLink only if data is loaded */}
                 {!loading && (
                     <CSVLink className="downloadbtn" data={csvData} filename={"Stock_Portfolio.csv"}>
-                        Download CSV
+                        Download PortFolio CSV
                     </CSVLink>
                 )}
             </div>

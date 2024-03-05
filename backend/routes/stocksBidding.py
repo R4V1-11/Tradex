@@ -3,26 +3,33 @@ import yfinance as yf
 import pandas as pd
 from flask import Flask
 from flask import Blueprint
- 
+import MySQLdb
 import datetime
 from flask_jwt_extended import JWTManager, jwt_required
 from concurrent.futures import ThreadPoolExecutor
 from routes.stockprices import fetch_stock_price
 import time
 import asyncio
+import os
  
 bidstock_bp = Blueprint('bidstock' , __name__)
  
  
- 
-def fetch_stocks_from_db(mysql):
- 
-    cur = mysql.connection.cursor()
+def fetch_stocks_from_db():
+    # Create a new connection
+    db = MySQLdb.connect(host=os.getenv('HOST'),
+                         user=os.getenv('DATABASE_USER'),
+                         passwd=os.getenv('DATABASE_PASSWORD'),
+                         db=os.getenv('DATABASE_NAME'))
+    cur = db.cursor()
     cur.execute("SELECT * FROM stock_bid")
     result = cur.fetchall()
-    column_names = ["id", "userid" ,"ticker", "price", "quantity", "action"]
+    column_names = ["id", "userid", "ticker", "price", "quantity", "action"]
     stocks = [dict(zip(column_names, row)) for row in result]
+    cur.close()
+    db.close()
     return stocks
+ 
  
  
  
@@ -80,7 +87,8 @@ def check_price_below_threshold(mysql,app):
     with app.app_context():
         while True:
             # print("background")
-            stocks = fetch_stocks_from_db(mysql)
+            # stocks = fetch_stocks_from_db(mysql)
+            stocks = fetch_stocks_from_db()
             print("stock from database///////////////////",stocks)
             for stock in stocks:
                 stock_price = fetch_stock_price(stock["ticker"])  # Simulated function
@@ -177,6 +185,7 @@ def get_orders():
 def remove_orders():
     data = request.get_json()
    
+    iD = data['id']
     userid = data['userId']
     ticker_name = data['ticker']
     price = data['price']
@@ -187,7 +196,7 @@ def remove_orders():
     cursor = mysql.connection.cursor()
  
     try:
-        cursor.execute("DELETE FROM stock_bid WHERE userid = %s and ticker_symbol = %s and price = %s and actions = %s", (userid, ticker_name, price, action))
+        cursor.execute("DELETE FROM stock_bid WHERE userid = %s and ticker_symbol = %s and price = %s and actions = %s and id=%s", (userid, ticker_name, price, action,iD))
         mysql.connection.commit()
         return jsonify({"message": "Order removed Sucessfully"}),   200
     except Exception as e:

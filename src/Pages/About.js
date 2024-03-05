@@ -50,13 +50,14 @@ const Order = () => {
  
 
   
-  const CancelOpenOrder = (ticker,price,action) => {
+  const CancelOpenOrder = (id,ticker,price,action) => {
     // Define the data you want to send to the server
     const user = JSON.parse(localStorage.getItem('user'));
     const token = user && user.access_token;
     // Extract the userid from the user object
     const userid = user && user.user && user.user.id;
     const data = {
+      id,
         ticker: ticker,
       userId: userid,
       price,
@@ -114,7 +115,7 @@ const Order = () => {
                 <p>{transaction.action}</p>
                 <p>Quantity: {transaction.quantity}</p> */}
                 <button className="cancel-btn"
-                  onClick={() => CancelOpenOrder(LimitHistory.ticker,LimitHistory.price,LimitHistory.action)}
+                  onClick={() => CancelOpenOrder(LimitHistory.id,LimitHistory.ticker,LimitHistory.price,LimitHistory.action)}
                 
                 >Cancel</button>
               </li>
