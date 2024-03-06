@@ -5,6 +5,7 @@ import bcrypt
 from flask_jwt_extended import create_access_token
 from mysql.connector import Error
 from MySQLdb import IntegrityError
+import re
 
 
 
@@ -29,6 +30,20 @@ def register_user():
     email = data.get("email")
     password_original = data.get("password")
     password = hash_password(password_original)
+     # Check if name, email, or password is empty or contains only whitespace
+    if not name.strip() or not email.strip() or not password_original.strip():
+        return jsonify({"error": "Name, email, or password cannot be empty or only whitespace"}), 400
+
+    # Validate email format
+    email_regex = r"[^@]+@[^@]+\.[^@]+"
+    if not re.match(email_regex, email):
+        return jsonify({"error": "Invalid email format"}), 400
+
+    # Validate password (example: at least 8 characters long, contains at least one letter and one number)
+    password_regex = r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+    if not re.match(password_regex, password_original):
+        return jsonify({"error": "Password must be at least 8 characters long and contain at least one letter and one number"}), 400
+
     # Insert user data into the database
     cur = mysql.connection.cursor()
     try:
