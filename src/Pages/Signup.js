@@ -14,34 +14,71 @@ const SignUpForm = () => {
   const navigate = useNavigate();
 
   const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
   const[openeye,setopeneye]=useState(false);
 
   function Openeye() {
     setopeneye(!openeye);
   }
  
+  // const handleChange = (event) => {
+  //   const { target } = event;
+  //   const value = target.type === "checkbox" ? target.checked : target.value;
+  //   const name = target.name;
+  //   if (name === 'email') {
+  //     if (validateEmail(value)) {
+  //       setFormData({ ...formData, [name]: value });
+  //       setEmailError(""); // Clear the error message if the email is valid
+  //     } else {
+  //       setEmailError("Please enter a valid email address.");
+  //     }
+  //   } else {
+  //     setFormData({ ...formData, [name]: value });
+  //   }
+    
+  // };
   const handleChange = (event) => {
     const { target } = event;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
+   
+    // Validate email on change
     if (name === 'email') {
-      if (validateEmail(value)) {
-        setFormData({ ...formData, [name]: value });
-        setEmailError(""); // Clear the error message if the email is valid
-      } else {
-        setEmailError("Please enter a valid email address.");
-      }
-    } else {
-      setFormData({ ...formData, [name]: value });
+       if (validateEmail(value)) {
+         setFormData({ ...formData, [name]: value });
+         setEmailError(""); // Clear the error message if the email is valid
+       } else {
+         setEmailError("Please enter a valid email address.");
+       }
     }
-    
-  };
+    // Validate password on change
+    else if (name === 'password') {
+       if (validatePassword(value)) {
+         setFormData({ ...formData, [name]: value });
+         setPasswordError(""); // Clear the error message if the password is valid
+       } else {
+         setFormData({ ...formData, [name]: value }); // Still set the value, but show an error
+         setPasswordError("Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
+       }
+    }
+    // Handle other fields if necessary
+    else {
+       setFormData({ ...formData, [name]: value });
+    }
+   };
+   
 
   const validateEmail = (email) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(String(email).toLowerCase());
   };
- 
+  const validatePassword = (password) => {
+    // Check for length, uppercase, lowercase, number, and special character
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(String(password));
+   };
+   
   const handleSignup = async (event) => {
     event.preventDefault();
     const { email, username, name, password } = formData;
@@ -125,22 +162,24 @@ const SignUpForm = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password" style={{color: 'azure'}}>Password</label>
-            <div style={{display:"flex"}}>
-            <input
-                 type={openeye ? "text" : "password"}
-                id="password"
-                className="formFieldInput"
-                style={{color:"azure"}}
-                placeholder="Enter your password"
-                name="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-            />
-            <p className="icon" onClick={Openeye}>{!openeye?<FaEye></FaEye>:<FaRegEyeSlash />}</p>
-            </div>
-          </div>
+ <label htmlFor="password" style={{color: 'azure'}}>Password</label>
+ <div style={{display:"flex"}}>
+    <input
+      type={openeye ? "text" : "password"}
+      id="password"
+      className="formFieldInput"
+      style={{color:"azure"}}
+      placeholder="Enter your password"
+      name="password"
+      required
+      value={formData.password}
+      onChange={handleChange}
+    />
+    <p className="icon" onClick={Openeye}>{!openeye?<FaEye></FaEye>:<FaRegEyeSlash />}</p>
+ </div>
+ {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>} {/* Display the password error message */}
+</div>
+
           <div className="form-group">
             <button type="submit" className="btn btn-primary">
               REGISTER

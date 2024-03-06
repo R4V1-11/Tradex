@@ -9,6 +9,8 @@ const LoginForm = () => {
     password: ""
   });
   const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
   const[openeye,setopeneye]=useState(false);
 
   function Openeye() {
@@ -25,25 +27,68 @@ const LoginForm = () => {
  
   const navigate = useNavigate();
  
+  // const handleChange = (event) => {
+  //   const target = event.target;
+  //   const value = target.type === "checkbox" ? target.checked : target.value;
+  //   const name = target.name;
+    
+  //   if (name === 'email') {
+  //     if (validateEmail(value)) {
+  //       setFormData({ ...formData, [name]: value });
+  //       setEmailError(""); // Clear the error message if the email is valid
+  //     } else {
+  //       setEmailError("Please enter a valid email address.");
+  //     }
+  //   } else {
+  //     setFormData({ ...formData, [name]: value });
+  //   }  
+  // };
   const handleChange = (event) => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
-    
+   
     if (name === 'email') {
-      if (validateEmail(value)) {
-        setFormData({ ...formData, [name]: value });
-        setEmailError(""); // Clear the error message if the email is valid
+       if (validateEmail(value)) {
+         setFormData({ ...formData, [name]: value });
+         setEmailError(""); // Clear the error message if the email is valid
+       } else {
+         setEmailError("Please enter a valid email address without spaces.");
+       }
+    } else if (name === 'password') {
+      if (validatePassword(value)) {
+         setFormData({ ...formData, [name]: value });
+         setPasswordError(""); // Clear the password error message if the password is valid
       } else {
-        setEmailError("Please enter a valid email address.");
+         setFormData({ ...formData, [name]: value }); // Still set the value, but show an error
+         setPasswordError("Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
       }
+     
+     
     } else {
-      setFormData({ ...formData, [name]: value });
-    }  
-  };
+       setFormData({ ...formData, [name]: value });
+    }
+   };
+   
+  // const validateEmail = (email) => {
+  // const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  // return regex.test(String(email).toLowerCase());}
   const validateEmail = (email) => {
-  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return regex.test(String(email).toLowerCase());}
+    // Check for spaces
+    if (email.includes(' ')) {
+       return false;
+    }
+    // Add your existing email validation logic here
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(String(email).toLowerCase());
+   };
+   
+   const validatePassword = (password) => {
+    // Check for length, uppercase, lowercase, number, and special character
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(String(password));
+   };
+   
  
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -113,23 +158,23 @@ const LoginForm = () => {
               {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
             </div>
             <div className="form-group">
-              <label htmlFor="password" style={{color: 'azure'}}>Password</label>
-              <div className="inp">
-              <input
-               
-               
-                type={openeye ? "text" : "password"}
-                id="password"
-                className="formFieldInput" style={{color:"azure"}}
-                placeholder="Enter your password"
-                name="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-              />
-               <p className="icon" onClick={Openeye}>{!openeye?<FaEye></FaEye>:<FaRegEyeSlash />}</p>
-               </div>
-            </div>
+ <label htmlFor="password" style={{color: 'azure'}}>Password</label>
+ <div className="inp">
+    <input
+      type={openeye ? "text" : "password"}
+      id="password"
+      className="formFieldInput" style={{color:"azure"}}
+      placeholder="Enter your password"
+      name="password"
+      required
+      value={formData.password}
+      onChange={handleChange}
+    />
+    <p className="icon" onClick={Openeye}>{!openeye?<FaEye></FaEye>:<FaRegEyeSlash />}</p>
+ </div>
+ {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
+</div>
+
          
             <div className="form-group">
               <button type="submit" className="btn btn-primary">

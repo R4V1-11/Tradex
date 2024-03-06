@@ -11,6 +11,7 @@
  
   /* background-color: aliceblue; */
 }
+
 .form-group{
   display: flex;
   flex-direction: column;
@@ -25,8 +26,8 @@
     border-radius:  8px;
     box-shadow:  0  0  10px #21CE99;
     margin-left: 400px;
-    margin-top: 150px;
-    height: 400px;
+    margin-top: 40px;
+    height: 520px;
     /* display: flex; */
  
    
