@@ -34,15 +34,24 @@ def register_user():
     if not name.strip() or not email.strip() or not password_original.strip():
         return jsonify({"error": "Name, email, or password cannot be empty or only whitespace"}), 400
 
+
+    if not re.search(r'\w', name) or not re.search(r'\w', email):
+        return jsonify({"error": "Name and email must contain at least one alphanumeric character"}), 400
+
+    # Validate email format and ensure it starts with a letter
+    email_regex = r"^[A-Za-z][^@]*@[^@]+\.[^@]+"
+    if not re.match(email_regex, email):
+        return jsonify({"error": "Invalid email format or does not start with a letter"}), 400
+        
     # Validate email format
     email_regex = r"[^@]+@[^@]+\.[^@]+"
     if not re.match(email_regex, email):
         return jsonify({"error": "Invalid email format"}), 400
 
     # Validate password (example: at least 8 characters long, contains at least one letter and one number)
-    password_regex = r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+    password_regex = r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
     if not re.match(password_regex, password_original):
-        return jsonify({"error": "Password must be at least 8 characters long and contain at least one letter and one number"}), 400
+        return jsonify({"error": "Password must be at least 8 characters long and contain at least special character  and one number"}), 400
 
     # Insert user data into the database
     cur = mysql.connection.cursor()
