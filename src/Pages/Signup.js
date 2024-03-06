@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link ,useNavigate} from "react-router-dom";
+import { FaEye } from "react-icons/fa";
+import { FaRegEyeSlash } from "react-icons/fa6";
 import "../CSS/Signup.css"
  
 const SignUpForm = () => {
@@ -12,6 +14,11 @@ const SignUpForm = () => {
   const navigate = useNavigate();
 
   const [emailError, setEmailError] = useState("");
+  const[openeye,setopeneye]=useState(false);
+
+  function Openeye() {
+    setopeneye(!openeye);
+  }
  
   const handleChange = (event) => {
     const { target } = event;
@@ -119,8 +126,9 @@ const SignUpForm = () => {
           </div>
           <div className="form-group">
             <label htmlFor="password" style={{color: 'azure'}}>Password</label>
+            <div style={{display:"flex"}}>
             <input
-                type="password"
+                 type={openeye ? "text" : "password"}
                 id="password"
                 className="formFieldInput"
                 style={{color:"azure"}}
@@ -130,6 +138,8 @@ const SignUpForm = () => {
                 value={formData.password}
                 onChange={handleChange}
             />
+            <p className="icon" onClick={Openeye}>{!openeye?<FaEye></FaEye>:<FaRegEyeSlash />}</p>
+            </div>
           </div>
           <div className="form-group">
             <button type="submit" className="btn btn-primary">
