@@ -118,8 +118,8 @@ const StockList = () => {
   
                   <div className='col-md-6'>
                   <div className={`card-text ${profitOrLossClass}`} style={{marginBottom:20}}>
-                  <strong>₹ </strong>{(stock.current_price*stock.quantity).toFixed(2)}
-                    <strong  style={{marginLeft:20}} >P/L</strong> {profitOrLoss >=   0 ? '+' : '-'} {Math.abs(profitOrLoss).toFixed(2)}
+                  <strong className="uncolouredText">₹ {(stock.current_price*stock.quantity).toFixed(2)}</strong>
+                    <strong className="uncolouredText" style={{marginLeft:20}} >P/L</strong> {profitOrLoss >=   0 ? '+' : '-'} {Math.abs(profitOrLoss).toFixed(2)}
                     <div>
                       <button className="btn btn-sm btn-danger btn-danger1" onClick={() => handleSellClick(stock.ticker, stock.current_price,stock.quantity)}>Sell</button>
                       <button className="btn btn-sm btn-success btn-success1" onClick={() => handleBuyClick(stock.ticker, stock.current_price)}>Buy</button>
