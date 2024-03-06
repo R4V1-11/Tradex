@@ -23,5 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 
 #cache
-Tradex\backend\__pycache__
-Tradex\backend\routes\__pycache__
+backend/__pycache__/
+backend/routes/__pycache__/

@@ -7,6 +7,7 @@ function SearchBox({currentPage, watchlistStocks }) { // Assuming userid is pass
   // console.log(watchlistStocks)
     const [inputValue, setInputValue] = useState('');
     const [suggestions, setSuggestions] = useState([]);
+    const [filteredSuggestions, setFilteredSuggestions] = useState([]);
     const user = JSON.parse(localStorage.getItem('user'));
     // Extract the userid from the user object
     const token = user && user.access_token;
@@ -22,7 +23,12 @@ function SearchBox({currentPage, watchlistStocks }) { // Assuming userid is pass
         setSuggestions([]);
       }
     }, [inputValue]);
- 
+    useEffect(() => {
+      const filtered = suggestions.filter(suggestion =>
+        suggestion.toLowerCase().startsWith(inputValue.toLowerCase())
+      );
+      setFilteredSuggestions(filtered);
+   }, [suggestions, inputValue]);
     const handleInputChange = (event) => {
       setInputValue(event.target.value);
     };
@@ -32,9 +38,9 @@ function SearchBox({currentPage, watchlistStocks }) { // Assuming userid is pass
       }
       return watchlistStocks.includes(ticker);
    };
-    const filteredSuggestions = suggestions.filter(suggestion =>
-      suggestion.toLowerCase().startsWith(inputValue.toLowerCase())
-    );
+    // const filteredSuggestions = suggestions.filter(suggestion =>
+    //   suggestion.toLowerCase().startsWith(inputValue.toLowerCase())
+    // );
  
     const Addstocks = (suggestion, userid, currentPage) => {
         // Define the data you want to send to the server
@@ -135,7 +141,9 @@ function SearchBox({currentPage, watchlistStocks }) { // Assuming userid is pass
         </div>
         {inputValue.length >  0 && (
           <ul className='Lists'>
-            {filteredSuggestions.map((suggestion, index) => (
+            {filteredSuggestions.length === 0 ? (
+            <li>No match was found</li>
+          ) : (filteredSuggestions.map((suggestion, index) => (
               <li key={index} id='stocks'>
                 {suggestion}
                 {isInWatchlist(suggestion) ? (
@@ -143,7 +151,7 @@ function SearchBox({currentPage, watchlistStocks }) { // Assuming userid is pass
               ) : (
                 <button className='btn add-btn' onClick={() => Addstocks(suggestion, userid, currentPage)}>+</button>
               )}</li>
-            ))}
+            )))}
           </ul>
         )}
       </div>
